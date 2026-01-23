@@ -26,7 +26,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+      const res = await axios.post("https://vov-foods-1.onrender.com/api/auth/login", form);
 
       // 🔐 Save token (JWT)
       localStorage.setItem("token", res.data.token);

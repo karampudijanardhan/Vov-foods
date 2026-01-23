@@ -36,7 +36,7 @@ const Signup: React.FC = () => {
 
     try {
       // 👉 Send only username + password to backend
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post("https://vov-foods-1.onrender.com/api/auth/signup", {
         username: form.username,
         password: form.password
       });

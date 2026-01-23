@@ -59,7 +59,7 @@ export const Navbar = () => {
       if (!status) return;
 
       try {
-        await axios.put("http://localhost:5000/api/order/status", {
+        await axios.put("https://vov-foods-1.onrender.com/api/order/status", {
           orderRef: orderRef.trim(),
           status: status.trim(),
         });

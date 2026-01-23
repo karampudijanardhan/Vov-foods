@@ -32,7 +32,7 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/order/my/${username}`
+          `https://vov-foods-1.onrender.com/api/order/my/${username}`
         );
 
         setOrders(res.data.orders || []);
