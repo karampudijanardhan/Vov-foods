@@ -66,7 +66,7 @@ const Checkout = () => {
       };
 
       // 🔥 send order to backend
-      await axios.post("http://localhost:5000/api/order", orderData);
+      await axios.post("https://vov-foods-1.onrender.com/api/order", orderData);
 
       // Clear cart and navigate to success page
       clearCart();
