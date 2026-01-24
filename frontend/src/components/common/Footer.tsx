@@ -10,11 +10,11 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="rounded-full flex items-center justify-center">
-                 <img
-    src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
-    alt="VOV Foods Logo"
-    className="h-32 w-auto object-contain"
-  />
+                <img
+                  src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
+                  alt="VOV Foods Logo"
+                  className="h-32 w-auto object-contain"
+                />
               </div>
               <div>
                 <h3 className="font-display font-bold text-xl">VOV FOODS</h3>
@@ -22,17 +22,27 @@ export const Footer = () => {
               </div>
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
-              Bringing you the authentic taste of homemade pickles, powders, and sweets 
-              made with traditional recipes passed down through generations.
+              Bringing you the authentic taste of homemade pickles, powders, and
+              sweets made with traditional recipes passed down through
+              generations.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
+              >
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
+              >
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a
+                href="#"
+                className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
+              >
                 <Youtube className="w-5 h-5" />
               </a>
             </div>
@@ -40,7 +50,9 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Quick Links</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">
+              Quick Links
+            </h4>
             <ul className="space-y-3">
               {[
                 { name: "All Products", path: "/products" },
@@ -50,7 +62,10 @@ export const Footer = () => {
                 { name: "Offers", path: "/offers" },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors">
+                  <Link
+                    to={link.path}
+                    className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors"
+                  >
                     {link.name}
                   </Link>
                 </li>
@@ -58,9 +73,11 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Customer Service */}
-          <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Customer Service</h4>
+          {/* Customer Service (HIDDEN ON MOBILE + TABLET) */}
+          <div className="hidden lg:block">
+            <h4 className="font-display font-semibold text-lg mb-4">
+              Customer Service
+            </h4>
             <ul className="space-y-3">
               {[
                 { name: "Track Order", path: "/track-order" },
@@ -70,7 +87,10 @@ export const Footer = () => {
                 { name: "Contact", path: "/contact" },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link to={link.path} className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors">
+                  <Link
+                    to={link.path}
+                    className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors"
+                  >
                     {link.name}
                   </Link>
                 </li>
@@ -80,23 +100,32 @@ export const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Contact Us</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">
+              Contact Us
+            </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 shrink-0 text-primary" />
                 <span className="text-sm opacity-80">
-                  3rd Main Rd, Central Avenue, Magunta Layout, Nellore, Andhra Pradesh 524003
+                  3rd Main Rd, Central Avenue, Magunta Layout, Nellore, Andhra
+                  Pradesh 524003
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 shrink-0 text-primary" />
-                <a href="tel:+917731983479" className="text-sm opacity-80 hover:opacity-100">
+                <a
+                  href="tel:+917731983479"
+                  className="text-sm opacity-80 hover:opacity-100"
+                >
                   +91 7731983479
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 shrink-0 text-primary" />
-                <a href="janardhankarampudi@gmail.com" className="text-sm opacity-80 hover:opacity-100">
+                <a
+                  href="mailto:janardhankarampudi@gmail.com"
+                  className="text-sm opacity-80 hover:opacity-100"
+                >
                   janardhankarampudi@gmail.com
                 </a>
               </li>
@@ -110,8 +139,12 @@ export const Footer = () => {
         <div className="container py-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm opacity-70">
           <p>© 2025 VOV FOODS. All rights reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:opacity-100">Privacy Policy</a>
-            <a href="#" className="hover:opacity-100">Terms of Service</a>
+            <a href="#" className="hover:opacity-100">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:opacity-100">
+              Terms of Service
+            </a>
           </div>
         </div>
       </div>
