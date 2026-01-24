@@ -23,10 +23,8 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const itemCount = getItemCount();
 
-  // ✅ UI auth state (no refresh persistence)
   const [showLogout, setShowLogout] = useState(false);
 
-  // 🔐 3-click hidden admin logic
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<number | null>(null);
 
@@ -80,18 +78,14 @@ export const Navbar = () => {
     }
   };
 
-  // ✅ REAL LOGOUT
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-
     setShowLogout(false);
-
     alert("Logged out 👋");
     navigate("/");
   };
 
-  // ✅ LISTEN FOR LOGIN SUCCESS EVENT
   useEffect(() => {
     const onLoginSuccess = () => {
       setShowLogout(true);
@@ -180,7 +174,6 @@ export const Navbar = () => {
 
             {/* Right actions */}
             <div className="flex items-center gap-2">
-              {/* 🔐 LOGIN / LOGOUT (DESKTOP) */}
               {showLogout ? (
                 <Button
                   variant="outline"
@@ -232,7 +225,11 @@ export const Navbar = () => {
                 className="lg:hidden"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
               </Button>
             </div>
           </div>
@@ -249,7 +246,6 @@ export const Navbar = () => {
               </Link>
             ))}
 
-            {/* 🆕 My Orders (only when logged in) */}
             {showLogout && (
               <Link
                 to="/my-orders"
@@ -261,13 +257,16 @@ export const Navbar = () => {
 
             <div className="ml-auto flex gap-2">
               <Link to="/support">
-                <Button variant="outline" size="sm">Support</Button>
+                <Button variant="outline" size="sm">
+                  Support
+                </Button>
               </Link>
 
-              {/* 🔁 Track Order (only when logged in) */}
               {showLogout && (
                 <Link to="/track-order">
-                  <Button variant="outline" size="sm">Track Order</Button>
+                  <Button variant="outline" size="sm">
+                    Track Order
+                  </Button>
                 </Link>
               )}
             </div>
@@ -283,7 +282,7 @@ export const Navbar = () => {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden border-t border-border bg-background"
             >
-              <div className="container py-4 space-y-2">
+              <div className="container py-4 space-y-3">
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}
@@ -295,7 +294,6 @@ export const Navbar = () => {
                   </Link>
                 ))}
 
-                {/* 🆕 My Orders (only when logged in) */}
                 {showLogout && (
                   <Link
                     to="/my-orders"
@@ -306,8 +304,8 @@ export const Navbar = () => {
                   </Link>
                 )}
 
-                <div className="pt-2 border-t border-border space-y-1">
-                  {/* 🔐 LOGIN / LOGOUT (MOBILE) */}
+                {/* ✅ REAL GAP FIX */}
+                <div className="pt-4 border-t border-border">
                   {showLogout ? (
                     <Button
                       variant="outline"
@@ -316,7 +314,7 @@ export const Navbar = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full justify-start border-destructive text-destructive"
+                      className="w-full justify-start border-destructive text-destructive mb-3"
                     >
                       Logout
                     </Button>
@@ -325,7 +323,7 @@ export const Navbar = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="w-full justify-start border-primary text-primary"
+                        className="w-full justify-start border-primary text-primary mb-3"
                       >
                         Login
                       </Button>
@@ -333,28 +331,43 @@ export const Navbar = () => {
                   )}
 
                   <Link to="/support" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" size="sm" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start mb-3"
+                    >
                       Support
                     </Button>
                   </Link>
 
-                  {/* 🔁 Track Order (only when logged in) */}
                   {showLogout && (
                     <Link to="/track-order" onClick={() => setIsMenuOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full justify-start mb-3"
+                      >
                         Track Order
                       </Button>
                     </Link>
                   )}
 
                   <Link to="/about" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" size="sm" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start mb-3"
+                    >
                       About Us
                     </Button>
                   </Link>
 
                   <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" size="sm" className="w-full justify-start">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start"
+                    >
                       Contact
                     </Button>
                   </Link>
