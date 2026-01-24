@@ -26,7 +26,8 @@ app.get("/", (req, res) => {
 });
 
 // 🔥 CORRECT FOR YOUR RENDER SETUP
-const distPath = path.join(__dirname, "dist");
+const distPath = path.join(__dirname, "../frontend/dist");
+
 
 app.use(express.static(distPath));
 
