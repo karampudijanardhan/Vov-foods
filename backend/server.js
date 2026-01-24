@@ -6,6 +6,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import authRoutes from "./routes/auth.js";
 import { connectDB } from "./config/db.js";
 import path from "path";
+import fs from "fs"; // 👈 ADD THIS
 
 dotenv.config();
 connectDB();
@@ -27,6 +28,13 @@ app.get("/", (req, res) => {
 
 // 🔥 CORRECT FOR RENDER: root/dist
 const distPath = path.join(__dirname, "../dist");
+
+// 👇 DEBUG LOGS (VERY IMPORTANT)
+console.log("DIST PATH =", distPath);
+console.log(
+  "INDEX EXISTS =",
+  fs.existsSync(path.join(distPath, "index.html"))
+);
 
 app.use(express.static(distPath));
 
