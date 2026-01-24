@@ -25,12 +25,12 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// 🔥 SERVE REACT BUILD (CORRECT PATH)
-const distPath = path.join(__dirname, "../frontend/dist");
+// 🔥 CORRECT FOR RENDER: root/dist
+const distPath = path.join(__dirname, "../dist");
 
 app.use(express.static(distPath));
 
-// 🔥 SPA fallback (Express 5 safe)
+// 🔥 SPA fallback
 app.use((req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
