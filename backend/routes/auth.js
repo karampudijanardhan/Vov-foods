@@ -6,16 +6,14 @@ import User from "../models/User.js";
 const router = express.Router();
 
 // 📝 SIGNUP
+import bcrypt from "bcryptjs";
+
 router.post("/signup", async (req, res) => {
   try {
-    console.log("REQ BODY 👉", req.body);
-
     const { username, password } = req.body || {};
 
     if (!username || !password) {
-      return res
-        .status(400)
-        .json({ message: "Username and password required" });
+      return res.status(400).json({ message: "Username and password required" });
     }
 
     const existingUser = await User.findOne({ username });
@@ -23,22 +21,23 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    const user = new User({ username, password });
+    // ✅ HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      username,
+      password: hashedPassword
+    });
+
     await user.save();
 
     res.status(201).json({ message: "Signup successful" });
   } catch (err) {
-  console.error("🔥 REAL Signup error:", err);
-
-  return res.status(500).json({
-    message: "Signup failed",
-    error: err.message,
-    name: err.name,
-    code: err.code
-  });
-}
-
+    console.error("Signup error:", err);
+    res.status(500).json({ message: "Signup failed" });
+  }
 });
+
 
 
 // 🔐 LOGIN
