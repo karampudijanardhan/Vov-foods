@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import orderRoutes from "./routes/orderRoutes.js";
-import authRoutes from "./routes/auth.js"; // 🔹 ADDITION: auth routes
+import authRoutes from "./routes/auth.js";
 import { connectDB } from "./config/db.js";
 
 dotenv.config();
@@ -10,17 +10,16 @@ connectDB();
 
 const app = express();
 
-// middleware
+// middleware  ✅ FIX HERE
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// 🔹 EXISTING ROUTES (unchanged)
+// routes
 app.use("/api/order", orderRoutes);
-
-// 🔹 ADDITION: AUTH ROUTES (signup + login)
 app.use("/api/auth", authRoutes);
 
-// 🔹 OPTIONAL: health check route (safe add)
+// health check
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
