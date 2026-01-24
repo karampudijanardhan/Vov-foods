@@ -25,11 +25,12 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// 🔥 FIX: correct dist folder path
-const distPath = path.join(__dirname, "../dist"); // 👈 IMPORTANT
+// 🔥 SERVE REACT BUILD (CORRECT PATH)
+const distPath = path.join(__dirname, "../frontend/dist");
 
 app.use(express.static(distPath));
 
+// 🔥 SPA fallback (Express 5 safe)
 app.use((req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
