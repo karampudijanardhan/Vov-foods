@@ -36,10 +36,19 @@ const Signup: React.FC = () => {
 
     try {
       // 👉 Send only username + password to backend
-      const res = await axios.post("https://vov-foods-1.onrender.com/api/auth/signup", {
-        username: form.username,
-        password: form.password
-      });
+      const res = await axios.post(
+  "https://vov-foods-1.onrender.com/api/auth/signup",
+  {
+    username: form.username,
+    password: form.password
+  },
+  {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+);
+
 
       alert("Signup successful ✅. Please login.");
 
