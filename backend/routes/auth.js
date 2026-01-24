@@ -8,10 +8,14 @@ const router = express.Router();
 // 📝 SIGNUP
 router.post("/signup", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    console.log("REQ BODY 👉", req.body);
+
+    const { username, password } = req.body || {};
 
     if (!username || !password) {
-      return res.status(400).json({ message: "Username and password required" });
+      return res
+        .status(400)
+        .json({ message: "Username and password required" });
     }
 
     const existingUser = await User.findOne({ username });
@@ -19,17 +23,16 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({ username, password });
     await user.save();
 
     res.status(201).json({ message: "Signup successful" });
   } catch (err) {
-    console.error("Signup error:", err);
+    console.error("🔥 REAL Signup error:", err);
     res.status(500).json({ message: "Signup failed" });
   }
 });
+
 
 // 🔐 LOGIN
 router.post("/login", async (req, res) => {
