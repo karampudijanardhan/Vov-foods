@@ -25,12 +25,13 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// 🔥 serve React dist
-app.use(express.static(path.join(__dirname, "dist")));
+// 🔥 FIX: correct dist folder path
+const distPath = path.join(__dirname, "../dist"); // 👈 IMPORTANT
 
-// 🔥 SPA fallback — Express 5 safe
+app.use(express.static(distPath));
+
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
