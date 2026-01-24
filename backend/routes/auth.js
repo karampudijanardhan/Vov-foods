@@ -6,7 +6,6 @@ import User from "../models/User.js";
 const router = express.Router();
 
 // 📝 SIGNUP
-import bcrypt from "bcryptjs";
 
 router.post("/signup", async (req, res) => {
   try {
