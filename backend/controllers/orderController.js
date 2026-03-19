@@ -1,107 +1,67 @@
 import Order from "../models/Order.js";
-import { sendTelegram } from "../utils/sendTelegram.js";
 
-// 🆕 helper to generate orderRef if not sent
-const generateOrderRef = () => {
-  return "VOV" + Date.now();
-};
+export const createOrder = async (req,res) => {
 
-// Place order
-export const placeOrder = async (req, res) => {
-  try {
-    const data = req.body;
+  try{
 
-    // 🆕 auto-generate orderRef if missing
-    if (!data.orderRef) {
-      data.orderRef = generateOrderRef();
-    }
+    const order = new Order(req.body);
 
-    const order = new Order(data);
-    await order.save();
+    const saved = await order.save();
 
-    const message = `
-🛒 New Order Received
-Order ID: ${order.orderRef}
-Name: ${order.name}
-Total: ₹${order.totalAmount}
-Status: ${order.status}
-`;
+    res.json(saved);
 
-    await sendTelegram(message);
+  }catch(err){
 
-    res.status(201).json({ success: true, order });
+    console.log(err);
 
-  } catch (err) {
-    console.error("❌ ORDER ERROR:", err.message);
-    res.status(500).json({ success: false, message: "Order failed" });
-  }
-};
-
-// Update status (admin)
-export const updateOrderStatus = async (req, res) => {
-  const { orderRef, status } = req.body;
-
-  try {
-    const order = await Order.findOne({ orderRef });
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
-    }
-
-    order.status = status;
-    await order.save();
-
-    const message = `
-📦 Order Update
-Order ID: ${order.orderRef}
-New Status: ${order.status}
-`;
-
-    await sendTelegram(message);
-
-    res.json({ success: true, order });
-
-  } catch (err) {
-    console.error("❌ STATUS ERROR:", err.message);
-    res.status(500).json({ success: false, message: "Status update failed" });
-  }
-};
-
-// Track order (user)
-export const trackOrder = async (req, res) => {
-  const { orderRef } = req.params;
-
-  try {
-    const order = await Order.findOne({ orderRef });
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: "Invalid Order ID" });
-    }
-
-    res.json({
-      success: true,
-      orderRef: order.orderRef,
-      status: order.status,
-      updatedAt: order.updatedAt || order.createdAt
+    res.status(500).json({
+      message:"Order creation failed"
     });
 
-  } catch (err) {
-    console.error("❌ TRACK ERROR:", err.message);
-    res.status(500).json({ success: false });
   }
+
 };
 
-// 🆕 Get orders of logged-in user (Order History)
-export const getMyOrders = async (req, res) => {
-  const { username } = req.params;
 
-  try {
-    const orders = await Order.find({ username }).sort({ createdAt: -1 });
+export const getOrders = async (req,res) => {
 
-    res.json({ success: true, orders });
+  try{
 
-  } catch (err) {
-    console.error("❌ MY ORDERS ERROR:", err.message);
-    res.status(500).json({ success: false, message: "Failed to fetch orders" });
+    const orders = await Order.find().sort({createdAt:-1});
+
+    res.json(orders);
+
+  }catch(err){
+
+    res.status(500).json({
+      message:"Orders fetch error"
+    });
+
   }
+
+};
+
+
+export const updateOrderStatus = async (req,res) => {
+
+  try{
+
+    const {status} = req.body;
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      {status},
+      {new:true}
+    );
+
+    res.json(order);
+
+  }catch(err){
+
+    res.status(500).json({
+      message:"Status update failed"
+    });
+
+  }
+
 };

@@ -1,27 +1,34 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-  // 🔑 Your existing fields (UNCHANGED)
-  orderRef: { type: String, required: true, unique: true },
-  name: String,
-  mobile: String,
-  address: String,
-  items: Array,
-  totalAmount: Number,
 
-  status: {
-    type: String,
-    enum: ["PLACED", "PACKING", "SHIPPED", "OUT_FOR_DELIVERY", "DELIVERED"],
-    default: "PLACED"
-  },
+ orderRef:String,
+ username:String,
+ name:String,
+ mobile:String,
+ address:String,
 
-  createdAt: { type: Date, default: Date.now },
+ items:[{
+  productId:String,
+  name:String,
+  image:String,
+  qty:Number,
+  weight:String,
+  price:Number
+ }],
 
-  // 🆕 ADDED FIELDS (for login + order history + tracking)
-  username: { type: String },          // to link order with logged-in user
-  email: { type: String },             // optional
-  subtotal: { type: Number },          // cart subtotal
-  deliveryCharge: { type: Number },    // delivery fee
+ totalAmount:Number,
+
+ status:{
+  type:String,
+  default:"PLACED"
+ },
+
+ createdAt:{
+  type:Date,
+  default:Date.now
+ }
+
 });
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model("Order",orderSchema);

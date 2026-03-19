@@ -1,23 +1,16 @@
 import express from "express";
 import {
-  placeOrder,
-  updateOrderStatus,
-  trackOrder,
-  getMyOrders      // 🆕 added
+  createOrder,
+  getOrders,
+  updateOrderStatus
 } from "../controllers/orderController.js";
 
 const router = express.Router();
 
-// 🛒 Place new order
-router.post("/", placeOrder);
+router.post("/",createOrder);
 
-// 📦 Update order status (admin)
-router.put("/status", updateOrderStatus);
+router.get("/",getOrders);
 
-// 🔍 Track order (user)
-router.get("/track/:orderRef", trackOrder);
-
-// 🆕 Get logged-in user's orders (Order History)
-router.get("/my/:username", getMyOrders);
+router.put("/status/:id",updateOrderStatus);
 
 export default router;

@@ -1,42 +1,60 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import bodyParser from "body-parser";
+import path from "path";
+
+import { connectDB } from "./config/db.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import authRoutes from "./routes/auth.js";
-import { connectDB } from "./config/db.js";
-import path from "path";
+import productRoutes from "./routes/productRoutes.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
-const __dirname = path.resolve();
+
+/* ---------- MIDDLEWARE ---------- */
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-// routes
+/* ---------- API ROUTES ---------- */
+
 app.use("/api/order", orderRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
+/* ---------- TEST ROUTE ---------- */
+
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API working" });
 });
 
-// 🔥 CORRECT FOR YOUR RENDER SETUP
-const distPath = path.join(__dirname, "../frontend/dist");
+/* ---------- SERVE FRONTEND ---------- */
 
+const __dirname = path.resolve();
+const distPath = path.join(__dirname, "../frontend/dist");
 
 app.use(express.static(distPath));
 
-// 🔥 SPA fallback
-app.use((req, res) => {
+/* ---------- SPA FALLBACK (FIXED VERSION) ---------- */
+
+app.get("*", (req, res) => {
+
+  // if request is API and not found
+  if (req.originalUrl.startsWith("/api")) {
+    return res.status(404).json({ message: "API route not found" });
+  }
+
+  // otherwise send frontend
   res.sendFile(path.join(distPath, "index.html"));
+
 });
 
+/* ---------- START SERVER ---------- */
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("🚀 Server running on port", PORT);
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
