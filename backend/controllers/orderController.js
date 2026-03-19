@@ -1,4 +1,21 @@
 import Order from "../models/Order.js";
+export const getMyOrders = async (req, res) => {
+  try {
+
+    const username = req.params.username;
+
+    const orders = await Order.find({ username }).sort({ createdAt: -1 });
+
+    res.json({ orders });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Failed to fetch orders"
+    });
+
+  }
+};
 
 export const createOrder = async (req,res) => {
 
