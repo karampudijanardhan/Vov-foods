@@ -37,16 +37,14 @@ const distPath = path.join(__dirname, "../frontend/dist");
 
 app.use(express.static(distPath));
 
-/* ---------- SPA FALLBACK (FIXED VERSION) ---------- */
+/* ---------- SPA FALLBACK (SAFE VERSION) ---------- */
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
 
-  // if request is API and not found
-  if (req.originalUrl.startsWith("/api")) {
+  if (req.path.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
   }
 
-  // otherwise send frontend
   res.sendFile(path.join(distPath, "index.html"));
 
 });
