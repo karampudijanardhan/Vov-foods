@@ -1,27 +1,20 @@
 import Order from "../models/Order.js";
 import sendOrderSMS from "../services/sendOrderSMS.js";
 
-
 // CREATE ORDER
 export const createOrder = async (req, res) => {
 
   try {
 
     const order = new Order(req.body);
-
     const saved = await order.save();
 
     console.log("Order saved:", saved.orderRef);
 
-    // Send SMS (customer + admin)
     try {
-
       await sendOrderSMS(saved);
-
     } catch (smsError) {
-
-      console.log("SMS failed but order created:", smsError.message);
-
+      console.log("SMS failed:", smsError.message);
     }
 
     res.status(201).json({
@@ -35,7 +28,6 @@ export const createOrder = async (req, res) => {
     console.log("Order creation error:", err);
 
     res.status(500).json({
-      success: false,
       message: "Order creation failed"
     });
 
@@ -44,8 +36,7 @@ export const createOrder = async (req, res) => {
 };
 
 
-
-// GET ALL ORDERS (ADMIN)
+// GET ALL ORDERS
 export const getOrders = async (req, res) => {
 
   try {
@@ -56,14 +47,11 @@ export const getOrders = async (req, res) => {
 
   } catch (err) {
 
-    res.status(500).json({
-      message: "Failed to fetch orders"
-    });
+    res.status(500).json({ message: "Failed to fetch orders" });
 
   }
 
 };
-
 
 
 // GET USER ORDERS
@@ -79,23 +67,19 @@ export const getMyOrders = async (req, res) => {
 
   } catch (err) {
 
-    res.status(500).json({
-      message: "Failed to fetch user orders"
-    });
+    res.status(500).json({ message: "Failed to fetch user orders" });
 
   }
 
 };
 
 
-
-// UPDATE ORDER STATUS
+// UPDATE STATUS
 export const updateOrderStatus = async (req, res) => {
 
   try {
 
     const { id } = req.params;
-
     const { status } = req.body;
 
     const updated = await Order.findByIdAndUpdate(
@@ -112,9 +96,7 @@ export const updateOrderStatus = async (req, res) => {
 
   } catch (err) {
 
-    res.status(500).json({
-      message: "Status update failed"
-    });
+    res.status(500).json({ message: "Status update failed" });
 
   }
 

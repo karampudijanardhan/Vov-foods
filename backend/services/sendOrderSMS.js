@@ -22,7 +22,6 @@ Address: ${order.address}
 
 Amount: ₹${order.totalAmount}`;
 
-    // Customer SMS
     await axios.post(
       "https://www.fast2sms.com/dev/bulkV2",
       {
@@ -40,7 +39,6 @@ Amount: ₹${order.totalAmount}`;
       }
     );
 
-    // Admin SMS
     await axios.post(
       "https://www.fast2sms.com/dev/bulkV2",
       {
@@ -58,11 +56,11 @@ Amount: ₹${order.totalAmount}`;
       }
     );
 
-    console.log("SMS sent successfully");
+    console.log("SMS sent");
 
   } catch (error) {
 
-    console.log("SMS Error:", error.message);
+    console.log("SMS error:", error.message);
 
   }
 

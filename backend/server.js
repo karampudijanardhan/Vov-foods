@@ -41,7 +41,7 @@ app.use(express.static(distPath));
 
 /* ---------- SPA FALLBACK ---------- */
 
-app.use((req, res, next) => {
+app.use((req, res) => {
 
   if (req.path.startsWith("/api")) {
     return res.status(404).json({ message: "API route not found" });
