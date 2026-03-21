@@ -6,16 +6,20 @@ export const createOrder = async (req, res) => {
 
   try {
 
+    console.log("📦 Incoming order:", req.body);
+
     const order = new Order(req.body);
+
     const saved = await order.save();
 
-    console.log("Order saved:", saved.orderRef);
+    console.log("✅ Order saved:", saved.orderRef);
 
-    try {
-      await sendOrderSMS(saved);
-    } catch (smsError) {
-      console.log("SMS failed:", smsError.message);
-    }
+    // SEND SMS
+    console.log("📩 Calling SMS service...");
+
+    await sendOrderSMS(saved);
+
+    console.log("📩 SMS function finished");
 
     res.status(201).json({
       success: true,
@@ -25,7 +29,7 @@ export const createOrder = async (req, res) => {
 
   } catch (err) {
 
-    console.log("Order creation error:", err);
+    console.log("❌ Order creation error:", err);
 
     res.status(500).json({
       message: "Order creation failed"
@@ -34,7 +38,6 @@ export const createOrder = async (req, res) => {
   }
 
 };
-
 
 // GET ALL ORDERS
 export const getOrders = async (req, res) => {
@@ -70,7 +73,7 @@ export const getMyOrders = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch user orders" });
 
   }
-
+await sendOrderSMS(saved);
 };
 
 
