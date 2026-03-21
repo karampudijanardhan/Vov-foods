@@ -4,11 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Twilio setup
 const client = twilio(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN
 );
+
 
 
 // ================= CREATE ORDER =================
@@ -20,14 +20,12 @@ export const createOrder = async (req, res) => {
 
     const saved = await order.save();
 
-    try {
+    // create item list
+    const itemsText = saved.items
+      .map(i => `${i.name} (${i.weight}) x${i.qty}`)
+      .join(", ");
 
-      const itemsText = saved.items
-        .map(i => `${i.name} (${i.weight}) x${i.qty}`)
-        .join(", ");
-
-      // Admin SMS
-      const adminMessage = `
+    const adminMessage = `
 New Order 🚀
 
 Order ID: ${saved.orderRef}
@@ -44,8 +42,7 @@ Address:
 ${saved.address}
 `;
 
-      // Customer SMS
-      const customerMessage = `
+    const customerMessage = `
 Thank you for your order 🙏
 
 Order ID: ${saved.orderRef}
@@ -55,14 +52,16 @@ Total: ₹${saved.totalAmount}
 VOV Foods
 `;
 
-      // Send admin SMS
+    try {
+
+      // SMS to admin
       await client.messages.create({
         body: adminMessage,
         from: process.env.TWILIO_PHONE,
         to: process.env.ADMIN_PHONE
       });
 
-      // Send customer SMS
+      // SMS to customer
       await client.messages.create({
         body: customerMessage,
         from: process.env.TWILIO_PHONE,
@@ -71,7 +70,7 @@ VOV Foods
 
     } catch (smsError) {
 
-      console.log("SMS sending failed:", smsError.message);
+      console.log("SMS failed:", smsError.message);
 
     }
 
@@ -88,6 +87,7 @@ VOV Foods
   }
 
 };
+
 
 
 // ================= GET ALL ORDERS (ADMIN) =================
@@ -110,6 +110,7 @@ export const getOrders = async (req, res) => {
 };
 
 
+
 // ================= GET USER ORDERS =================
 export const getMyOrders = async (req, res) => {
 
@@ -130,6 +131,7 @@ export const getMyOrders = async (req, res) => {
   }
 
 };
+
 
 
 // ================= UPDATE ORDER STATUS =================
