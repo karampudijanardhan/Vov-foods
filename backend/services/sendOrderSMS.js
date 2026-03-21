@@ -4,6 +4,8 @@ const sendOrderSMS = async (order) => {
 
   try {
 
+    console.log("📩 SMS service started");
+
     const customerPhone = order.phone;
     const adminPhone = process.env.ADMIN_PHONE;
 
@@ -20,34 +22,50 @@ Phone: ${order.phone}
 Amount: ₹${order.totalAmount}`;
 
     // CUSTOMER SMS
-    await axios.get("https://www.fast2sms.com/dev/bulkV2", {
-      params: {
-        authorization: process.env.FAST2SMS_API_KEY,
+    const customerSMS = await axios.post(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
         route: "q",
         message: customerMessage,
         language: "english",
         flash: 0,
         numbers: customerPhone
+      },
+      {
+        headers: {
+          authorization: process.env.FAST2SMS_API_KEY,
+          "Content-Type": "application/json"
+        }
       }
-    });
+    );
+
+    console.log("Customer SMS response:", customerSMS.data);
 
     // ADMIN SMS
-    await axios.get("https://www.fast2sms.com/dev/bulkV2", {
-      params: {
-        authorization: process.env.FAST2SMS_API_KEY,
+    const adminSMS = await axios.post(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
         route: "q",
         message: adminMessage,
         language: "english",
         flash: 0,
         numbers: adminPhone
+      },
+      {
+        headers: {
+          authorization: process.env.FAST2SMS_API_KEY,
+          "Content-Type": "application/json"
+        }
       }
-    });
+    );
 
-    console.log("SMS sent successfully");
+    console.log("Admin SMS response:", adminSMS.data);
+
+    console.log("✅ SMS sent successfully");
 
   } catch (error) {
 
-    console.log("SMS error:", error.response?.data || error.message);
+    console.log("❌ SMS error:", error.response?.data || error.message);
 
   }
 
