@@ -1,68 +1,68 @@
-import twilio from "twilio";
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+import axios from "axios";
 
 const sendOrderSMS = async (order) => {
 
   try {
 
-    const itemsText = order.items
-      .map(i => `${i.name} (${i.weight}) x${i.qty}`)
-      .join(", ");
+    const customerPhone = order.phone;
+    const adminPhone = process.env.ADMIN_PHONE;
 
-    const adminMessage = `
-New Order 🚀
+    const customerMessage = `Vov Foods Order Confirmed
 
-Order ID: ${order.orderRef}
+Name: ${order.name}
+Amount: ₹${order.totalAmount}
+
+Thank you for your order!`;
+
+    const adminMessage = `New Order Received
+
 Customer: ${order.name}
-Phone: ${order.mobile}
+Phone: ${order.phone}
+Address: ${order.address}
 
-Items:
-${itemsText}
+Amount: ₹${order.totalAmount}`;
 
-Total: ₹${order.totalAmount}
+    // Customer SMS
+    await axios.post(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
+        route: "q",
+        message: customerMessage,
+        language: "english",
+        flash: 0,
+        numbers: customerPhone
+      },
+      {
+        headers: {
+          authorization: process.env.FAST2SMS_API_KEY,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-Address:
-${order.address}
-`;
-
-    const customerMessage = `
-Thank you for your order 🙏
-
-Order ID: ${order.orderRef}
-
-Total: ₹${order.totalAmount}
-
-VOV Foods
-`;
-
-    const customerPhone =
-      order.mobile.startsWith("+") ? order.mobile : "+91" + order.mobile;
-
-    console.log("Sending admin SMS...");
-
-    await client.messages.create({
-      body: adminMessage,
-      from: process.env.TWILIO_PHONE,
-      to: process.env.ADMIN_PHONE
-    });
-
-    console.log("Sending customer SMS...");
-
-    await client.messages.create({
-      body: customerMessage,
-      from: process.env.TWILIO_PHONE,
-      to: customerPhone
-    });
+    // Admin SMS
+    await axios.post(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
+        route: "q",
+        message: adminMessage,
+        language: "english",
+        flash: 0,
+        numbers: adminPhone
+      },
+      {
+        headers: {
+          authorization: process.env.FAST2SMS_API_KEY,
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
     console.log("SMS sent successfully");
 
   } catch (error) {
 
-    console.log("SMS error:", error.message);
+    console.log("SMS Error:", error.message);
 
   }
 
