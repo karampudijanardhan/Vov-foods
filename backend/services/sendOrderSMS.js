@@ -2,40 +2,52 @@ import axios from "axios";
 
 const sendOrderSMS = async (order) => {
 
-  console.log("📩 SMS service started");
-
   try {
 
     const customerPhone = order.phone;
     const adminPhone = process.env.ADMIN_PHONE;
 
-    console.log("Customer phone:", customerPhone);
-    console.log("Admin phone:", adminPhone);
+    const customerMessage =
+`Vov Foods Order Confirmed
+Order ID: ${order.orderRef}
+Amount: ₹${order.totalAmount}`;
 
-    const message = `Order ${order.orderRef} confirmed`;
+    const adminMessage =
+`New Order Received
+Order ID: ${order.orderRef}
+Customer: ${order.name}
+Phone: ${order.phone}
+Amount: ₹${order.totalAmount}`;
 
-    const response = await axios.post(
-      "https://www.fast2sms.com/dev/bulkV2",
-      {
+    // CUSTOMER SMS
+    await axios.get("https://www.fast2sms.com/dev/bulkV2", {
+      params: {
+        authorization: process.env.FAST2SMS_API_KEY,
         route: "q",
-        message: message,
+        message: customerMessage,
         language: "english",
         flash: 0,
         numbers: customerPhone
-      },
-      {
-        headers: {
-          authorization: process.env.FAST2SMS_API_KEY,
-          "Content-Type": "application/json"
-        }
       }
-    );
+    });
 
-    console.log("SMS response:", response.data);
+    // ADMIN SMS
+    await axios.get("https://www.fast2sms.com/dev/bulkV2", {
+      params: {
+        authorization: process.env.FAST2SMS_API_KEY,
+        route: "q",
+        message: adminMessage,
+        language: "english",
+        flash: 0,
+        numbers: adminPhone
+      }
+    });
+
+    console.log("SMS sent successfully");
 
   } catch (error) {
 
-    console.log("❌ SMS error:", error.response?.data || error.message);
+    console.log("SMS error:", error.response?.data || error.message);
 
   }
 
