@@ -1,4 +1,4 @@
-const twilio = require("twilio");
+import twilio from "twilio";
 
 const client = twilio(
   process.env.TWILIO_ACCOUNT_SID,
@@ -6,6 +6,7 @@ const client = twilio(
 );
 
 const sendOrderSMS = async (order) => {
+
   try {
 
     const itemsText = order.items
@@ -33,13 +34,15 @@ Thank you for your order 🙏
 
 Order ID: ${order.orderRef}
 
-Items:
-${itemsText}
-
 Total: ₹${order.totalAmount}
 
 VOV Foods
 `;
+
+    const customerPhone =
+      order.mobile.startsWith("+") ? order.mobile : "+91" + order.mobile;
+
+    console.log("Sending admin SMS...");
 
     await client.messages.create({
       body: adminMessage,
@@ -47,15 +50,22 @@ VOV Foods
       to: process.env.ADMIN_PHONE
     });
 
+    console.log("Sending customer SMS...");
+
     await client.messages.create({
       body: customerMessage,
       from: process.env.TWILIO_PHONE,
-      to: "+91" + order.mobile
+      to: customerPhone
     });
 
+    console.log("SMS sent successfully");
+
   } catch (error) {
-    console.log("SMS error:", error);
+
+    console.log("SMS error:", error.message);
+
   }
+
 };
 
-module.exports = sendOrderSMS;
+export default sendOrderSMS;

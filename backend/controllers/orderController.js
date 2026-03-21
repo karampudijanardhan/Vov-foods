@@ -1,78 +1,17 @@
 import Order from "../models/Order.js";
-import twilio from "twilio";
-import dotenv from "dotenv";
+import sendOrderSMS from "../services/sendOrderSMS.js";
 
-dotenv.config();
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
-
-
-// ================= CREATE ORDER =================
+// CREATE ORDER
 export const createOrder = async (req, res) => {
-
   try {
 
     const order = new Order(req.body);
-
     const saved = await order.save();
 
-    // create item list
-    const itemsText = saved.items
-      .map(i => `${i.name} (${i.weight}) x${i.qty}`)
-      .join(", ");
+    console.log("Order saved:", saved.orderRef);
 
-    const adminMessage = `
-New Order 🚀
-
-Order ID: ${saved.orderRef}
-
-Customer: ${saved.name}
-Phone: ${saved.mobile}
-
-Items:
-${itemsText}
-
-Total: ₹${saved.totalAmount}
-
-Address:
-${saved.address}
-`;
-
-    const customerMessage = `
-Thank you for your order 🙏
-
-Order ID: ${saved.orderRef}
-
-Total: ₹${saved.totalAmount}
-
-VOV Foods
-`;
-
-    try {
-
-      // SMS to admin
-      await client.messages.create({
-        body: adminMessage,
-        from: process.env.TWILIO_PHONE,
-        to: process.env.ADMIN_PHONE
-      });
-
-      // SMS to customer
-      await client.messages.create({
-        body: customerMessage,
-        from: process.env.TWILIO_PHONE,
-        to: "+91" + saved.mobile
-      });
-
-    } catch (smsError) {
-
-      console.log("SMS failed:", smsError.message);
-
-    }
+    // send SMS
+    await sendOrderSMS(saved);
 
     res.json(saved);
 
@@ -85,12 +24,10 @@ VOV Foods
     });
 
   }
-
 };
 
 
-
-// ================= GET ALL ORDERS (ADMIN) =================
+// GET ALL ORDERS
 export const getOrders = async (req, res) => {
 
   try {
@@ -110,8 +47,7 @@ export const getOrders = async (req, res) => {
 };
 
 
-
-// ================= GET USER ORDERS =================
+// GET USER ORDERS
 export const getMyOrders = async (req, res) => {
 
   try {
@@ -122,7 +58,7 @@ export const getMyOrders = async (req, res) => {
 
     res.json({ orders });
 
-  } catch (error) {
+  } catch (err) {
 
     res.status(500).json({
       message: "Failed to fetch orders"
@@ -133,8 +69,7 @@ export const getMyOrders = async (req, res) => {
 };
 
 
-
-// ================= UPDATE ORDER STATUS =================
+// UPDATE ORDER STATUS
 export const updateOrderStatus = async (req, res) => {
 
   try {
