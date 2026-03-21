@@ -8,11 +8,16 @@ import {
 
 const router = express.Router();
 
-router.post("/",createOrder);
+// Create order (will also send SMS)
+router.post("/", createOrder);
 
-router.get("/",getOrders);
+// Get all orders (admin)
+router.get("/", getOrders);
+
+// Get orders for logged user
 router.get("/my/:username", getMyOrders);
 
-router.put("/status/:id",updateOrderStatus);
+// Update order status
+router.put("/status/:id", updateOrderStatus);
 
 export default router;
