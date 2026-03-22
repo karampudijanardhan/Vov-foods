@@ -10,23 +10,44 @@ import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   product: Product;
+  reduceStock?: (productId: string, quantity?: number) => void;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, reduceStock }: ProductCardProps) => {
+
   const [selectedWeight, setSelectedWeight] = useState(product.weightOptions[0]);
+
   const { addToCart } = useCart();
   const { toast } = useToast();
 
   const currentPrice = product.prices[selectedWeight];
-  const isOutOfStock = product.stock === 0;
+
+  const isOutOfStock = product.stock <= 0;
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
+
+    // HARD STOP if stock = 0
+    if (product.stock <= 0) {
+
+      toast({
+        title: "Out of Stock",
+        description: "This product is currently unavailable.",
+        variant: "destructive",
+      });
+
+      return;
+    }
+
     addToCart(product, selectedWeight, 1);
+
+    // Reduce stock
+    reduceStock?.(product.id, 1);
+
     toast({
       title: "Added to cart!",
       description: `${product.name} (${selectedWeight}) added to your cart.`,
     });
+
   };
 
   const spiceLevelColors = {
@@ -43,14 +64,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       whileHover={{ y: -4 }}
       className="group bg-card rounded-xl overflow-hidden shadow-card hover:shadow-hover transition-all duration-300"
     >
-      {/* Image section */}
+
+      {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-muted">
+
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        
+
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1">
           {product.badges.slice(0, 2).map((badge) => (
@@ -63,13 +86,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           ))}
         </div>
 
-        {/* Spice level indicator */}
+        {/* Spice Level */}
         <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${spiceLevelColors[product.spiceLevel]}`}>
           <Flame className="w-3 h-3" />
           {product.spiceLevel.charAt(0).toUpperCase() + product.spiceLevel.slice(1)}
         </div>
 
-        {/* Quick view overlay */}
+        {/* Quick View */}
         <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <Link to={`/product/${product.id}`}>
             <Button variant="secondary" size="sm" className="gap-2">
@@ -79,38 +102,52 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </Link>
         </div>
 
+        {/* Out Of Stock Overlay */}
         {isOutOfStock && (
           <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-            <Badge variant="destructive" className="text-sm px-4 py-2">Out of Stock</Badge>
+            <Badge variant="destructive" className="text-sm px-4 py-2">
+              Out of Stock
+            </Badge>
           </div>
         )}
+
       </div>
 
       {/* Content */}
       <div className="p-4 space-y-3">
+
         {/* Category & Rating */}
         <div className="flex items-center justify-between">
+
           <span className="text-xs font-medium text-primary uppercase tracking-wide">
             {product.category}
           </span>
+
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-secondary text-secondary" />
-            <span className="text-sm font-medium">{product.rating}</span>
+            <span className="text-sm font-medium">
+              {product.rating}
+            </span>
           </div>
+
         </div>
 
-        {/* Name & Description */}
+        {/* Title */}
         <div>
+
           <h3 className="font-display font-semibold text-lg text-foreground line-clamp-1">
             {product.name}
           </h3>
+
           <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
             {product.description}
           </p>
+
         </div>
 
-        {/* Weight selector */}
+        {/* Weight Selector */}
         <div className="flex gap-2">
+
           {product.weightOptions.map((weight) => (
             <button
               key={weight}
@@ -124,19 +161,31 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               {weight}
             </button>
           ))}
+
         </div>
 
-        {/* Shelf life */}
+        {/* Shelf Life */}
         <p className="text-xs text-muted-foreground">
           Shelf life: {product.shelfLife}
         </p>
 
-        {/* Price & Add to cart */}
+        {/* Stock */}
+        <p className="text-xs text-muted-foreground">
+          Stock: {product.stock}
+        </p>
+
+        {/* Price + Button */}
         <div className="flex items-center justify-between pt-2 border-t border-border">
+
           <div>
-            <span className="text-2xl font-bold text-foreground">₹{currentPrice}</span>
-            <span className="text-sm text-muted-foreground ml-1">/ {selectedWeight}</span>
+            <span className="text-2xl font-bold text-foreground">
+              ₹{currentPrice}
+            </span>
+            <span className="text-sm text-muted-foreground ml-1">
+              / {selectedWeight}
+            </span>
           </div>
+
           <Button
             size="sm"
             onClick={handleAddToCart}
@@ -144,10 +193,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             className="gap-2 gradient-saffron hover:opacity-90"
           >
             <ShoppingCart className="w-4 h-4" />
-            Add
+            {isOutOfStock ? "Out of Stock" : "Add"}
           </Button>
+
         </div>
+
       </div>
+
     </motion.div>
   );
 };

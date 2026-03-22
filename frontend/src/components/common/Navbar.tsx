@@ -10,36 +10,64 @@ import axios from "axios";
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Products", path: "/products" },
-  { name: "Pickles", path: "/category/pickles" },
-  { name: "Powders", path: "/category/powders" },
-  { name: "Sweets", path: "/category/sweets" },
+
+  {
+    name: "Pickles",
+    submenu: [
+      { name: "Veg Pickles", path: "/category/veg-pickles" },
+      { name: "Non Veg Pickles", path: "/category/nonveg-pickles" },
+    ],
+  },
+
+  {
+    name: "Powders",
+    submenu: [
+      { name: "Masala Powders", path: "/category/masala-powders" },
+      { name: "Karam Podi", path: "/category/karampodi" },
+    ],
+  },
+
+  {
+    name: "Sweets",
+    submenu: [
+      { name: "Sweets", path: "/category/sweets" },
+      { name: "Vadiyalu", path: "/category/vadiyalu" },
+      { name: "Hot Snacks", path: "/category/hot-snacks" },
+    ],
+  },
+
+  { name: "Special Items", path: "/category/special-items" },
   { name: "Offers", path: "/offers" },
 ];
 
 export const Navbar = () => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [openMobileMenu, setOpenMobileMenu] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
   const { getItemCount } = useCart();
   const navigate = useNavigate();
   const itemCount = getItemCount();
 
   const [showLogout, setShowLogout] = useState(false);
+  const token = localStorage.getItem("token");
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<number | null>(null);
 
   const handleAdminClicks = async () => {
+
     clickCountRef.current += 1;
 
-    if (clickTimerRef.current) {
-      clearTimeout(clickTimerRef.current);
-    }
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
 
     clickTimerRef.current = window.setTimeout(() => {
       clickCountRef.current = 0;
     }, 1500);
 
     if (clickCountRef.current === 3) {
+
       clickCountRef.current = 0;
 
       const pass = prompt("Admin access code:");
@@ -48,335 +76,323 @@ export const Navbar = () => {
         return;
       }
 
-      const orderRef = prompt("Enter Order ID (e.g. AMK71218480):");
+      const orderRef = prompt("Enter Order ID:");
       if (!orderRef) return;
 
       const status = prompt(
         "Enter Status:\nPLACED\nPACKING\nSHIPPED\nOUT_FOR_DELIVERY\nDELIVERED"
       );
+
       if (!status) return;
 
       try {
+
         await axios.put("https://vov-foods-1.onrender.com/api/order/status", {
           orderRef: orderRef.trim(),
           status: status.trim(),
         });
 
         alert("✅ Order status updated successfully!");
-      } catch (err) {
-        console.error("Admin update error:", err);
+
+      } catch {
+
         alert("❌ Failed to update order");
+
       }
     }
   };
 
   const handleSearch = (e: React.FormEvent) => {
+
     e.preventDefault();
+
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     }
+
   };
 
   const handleLogout = () => {
+
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
     setShowLogout(false);
+
     alert("Logged out 👋");
     navigate("/");
+
   };
 
   useEffect(() => {
+
     const onLoginSuccess = () => {
       setShowLogout(true);
     };
 
     window.addEventListener("login-success", onLoginSuccess);
+
     return () => {
       window.removeEventListener("login-success", onLoginSuccess);
     };
+
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      {/* Top bar */}
-      <div className="bg-primary text-primary-foreground text-sm py-2">
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <a
-              href="tel:+919876543210"
-              className="flex items-center gap-1 hover:opacity-80 transition-opacity"
-            >
-              <Phone className="w-3 h-3" />
-              <span className="hidden sm:inline">+91 7731983479</span>
-            </a>
-            <Link
-              to="/find-store"
-              className="flex items-center gap-1 hover:opacity-80 transition-opacity"
-            >
-              <MapPin className="w-3 h-3" />
-              <span className="hidden sm:inline">Find a Store</span>
-            </Link>
-          </div>
-          <Link
-            to="/offers"
-            className="flex items-center gap-1 hover:opacity-80 transition-opacity"
-          >
-            <Gift className="w-3 h-3" />
-            <span>Get 20% Off on First Order!</span>
-          </Link>
-        </div>
-      </div>
 
-      {/* Main navbar */}
-      <nav className="bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="container py-4">
-          <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 shrink-0">
-              <div className="w-39 h-12 rounded-full flex items-center justify-center">
-                <img
-                  src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
-                  alt="VOV Foods Logo"
-                  className="h-10 w-auto object-contain"
-                />
-              </div>
+<header className="sticky top-0 z-50 w-full">
 
-              <div className="hidden sm:block">
-                <h1
-                  className="font-display font-bold text-xl text-foreground leading-tight cursor-pointer select-none"
-                  onClick={handleAdminClicks}
-                >
-                  VOV FOODS
-                </h1>
-                <p className="text-xs text-muted-foreground">
-                  TASTE OF VILLAGE FOODS
-                </p>
-              </div>
-            </Link>
+{/* TOP BAR */}
+<div className="bg-primary text-primary-foreground text-sm py-2">
+<div className="container flex justify-between items-center">
 
-            {/* Search bar */}
-            <form
-              onSubmit={handleSearch}
-              className="hidden md:flex flex-1 max-w-md mx-4"
-            >
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search pickles, powders, sweets..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 bg-muted/50 border-0 focus-visible:ring-primary"
-                />
-              </div>
-            </form>
+<div className="flex items-center gap-4">
 
-            {/* Right actions */}
-            <div className="flex items-center gap-2">
-              {showLogout ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="hidden lg:block border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground transition"
-                >
-                  Logout
-                </Button>
-              ) : (
-                <Link to="/login" className="hidden lg:block">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground transition"
-                  >
-                    Login
-                  </Button>
-                </Link>
-              )}
+<a href="tel:+917731983479" className="flex items-center gap-1">
+<Phone className="w-3 h-3" />
+<span className="hidden sm:inline">+91 7731983479</span>
+</a>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                onClick={() => navigate("/search")}
-              >
-                <Search className="w-5 h-5" />
-              </Button>
+<Link to="/find-store" className="flex items-center gap-1">
+<MapPin className="w-3 h-3" />
+<span className="hidden sm:inline">Find a Store</span>
+</Link>
 
-              <Link to="/cart">
-                <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="w-5 h-5" />
-                  {itemCount > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-accent-foreground text-xs flex items-center justify-center font-medium"
-                    >
-                      {itemCount}
-                    </motion.span>
-                  )}
-                </Button>
-              </Link>
+</div>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
-              </Button>
-            </div>
-          </div>
+<Link to="/offers" className="flex items-center gap-1">
+<Gift className="w-3 h-3" />
+<span>Get 20% Off on First Order!</span>
+</Link>
 
-          {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-1 mt-4 pt-4 border-t border-border">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+</div>
+</div>
 
-            {showLogout && (
-              <Link
-                to="/my-orders"
-                className="px-4 py-2 text-sm font-medium text-primary hover:text-primary hover:bg-muted rounded-lg transition-colors"
-              >
-                My Orders
-              </Link>
-            )}
+{/* MAIN NAVBAR */}
+<nav className="bg-background/95 backdrop-blur-md border-b shadow-sm">
 
-            <div className="ml-auto flex gap-2">
-              <Link to="/support">
-                <Button variant="outline" size="sm">
-                  Support
-                </Button>
-              </Link>
+<div className="container py-4">
 
-              {showLogout && (
-                <Link to="/track-order">
-                  <Button variant="outline" size="sm">
-                    Track Order
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
+{/* LOGO + SEARCH + CART */}
+<div className="flex items-center justify-between gap-4">
 
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-border bg-background"
-            >
-              <div className="container py-4 space-y-3">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-foreground hover:bg-muted rounded-lg transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+<Link to="/" className="flex items-center gap-2 shrink-0">
 
-                {showLogout && (
-                  <Link
-                    to="/my-orders"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-primary hover:bg-muted rounded-lg transition-colors"
-                  >
-                    My Orders
-                  </Link>
-                )}
+<img
+src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
+className="h-10"
+/>
 
-                {/* ✅ REAL GAP FIX */}
-                <div className="pt-4 border-t border-border">
-                  {showLogout ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        handleLogout();
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full justify-start border-destructive text-destructive mb-3"
-                    >
-                      Logout
-                    </Button>
-                  ) : (
-                    <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full justify-start border-primary text-primary mb-3"
-                      >
-                        Login
-                      </Button>
-                    </Link>
-                  )}
+<div className="hidden sm:block">
 
-                  <Link to="/support" onClick={() => setIsMenuOpen(false)}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-start mb-3"
-                    >
-                      Support
-                    </Button>
-                  </Link>
+<h1
+className="font-bold text-xl cursor-pointer"
+onClick={handleAdminClicks}
+>
+VOV FOODS
+</h1>
 
-                  {showLogout && (
-                    <Link to="/track-order" onClick={() => setIsMenuOpen(false)}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full justify-start mb-3"
-                      >
-                        Track Order
-                      </Button>
-                    </Link>
-                  )}
+<p className="text-xs text-muted-foreground">
+TASTE OF VILLAGE FOODS
+</p>
 
-                  <Link to="/about" onClick={() => setIsMenuOpen(false)}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-start mb-3"
-                    >
-                      About Us
-                    </Button>
-                  </Link>
+</div>
 
-                  <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-start"
-                    >
-                      Contact
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </header>
-  );
+</Link>
+
+<form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4">
+
+<div className="relative w-full">
+
+<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
+
+<Input
+type="search"
+placeholder="Search pickles, powders, sweets..."
+value={searchQuery}
+onChange={(e) => setSearchQuery(e.target.value)}
+className="pl-10"
+/>
+
+</div>
+
+</form>
+
+{/* RIGHT SIDE */}
+<div className="flex items-center gap-2">
+
+<Link to="/cart">
+<Button variant="ghost" size="icon" className="relative">
+
+<ShoppingCart className="w-5 h-5" />
+
+{itemCount > 0 && (
+<motion.span
+initial={{ scale: 0 }}
+animate={{ scale: 1 }}
+className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-xs flex items-center justify-center"
+>
+{itemCount}
+</motion.span>
+)}
+
+</Button>
+</Link>
+
+{token ? (
+<Link to="/my-orders">
+<Button variant="outline" size="sm">My Orders</Button>
+</Link>
+) : (
+<Link to="/login">
+<Button variant="outline" size="sm">Login</Button>
+</Link>
+)}
+
+{token && (
+<Button
+variant="outline"
+size="sm"
+onClick={handleLogout}
+className="border-destructive text-destructive"
+>
+Logout
+</Button>
+)}
+
+<Button
+variant="ghost"
+size="icon"
+className="lg:hidden"
+onClick={() => setIsMenuOpen(!isMenuOpen)}
+>
+{isMenuOpen ? <X /> : <Menu />}
+</Button>
+
+</div>
+</div>
+
+{/* DESKTOP NAV */}
+<div className="hidden lg:flex items-center gap-1 mt-4 pt-4 border-t">
+
+{navLinks.map((link) =>
+link.submenu ? (
+<div key={link.name} className="relative group">
+
+<span className="px-4 py-2 text-sm font-medium cursor-pointer">
+{link.name}
+</span>
+
+<div className="absolute left-0 mt-2 hidden group-hover:block bg-white border rounded-lg shadow-md min-w-[180px]">
+
+{link.submenu.map((sub) => (
+<Link
+key={sub.path}
+to={sub.path}
+className="block px-4 py-2 text-sm hover:bg-muted"
+>
+{sub.name}
+</Link>
+))}
+
+</div>
+</div>
+) : (
+
+<Link
+key={link.path}
+to={link.path}
+className="px-4 py-2 text-sm font-medium"
+>
+{link.name}
+</Link>
+
+)
+)}
+
+</div>
+
+{/* MOBILE MENU */}
+<AnimatePresence>
+{isMenuOpen && (
+
+<motion.div
+initial={{ height: 0, opacity: 0 }}
+animate={{ height: "auto", opacity: 1 }}
+exit={{ height: 0, opacity: 0 }}
+className="lg:hidden overflow-hidden border-t mt-4 pt-4"
+>
+
+<div className="flex flex-col">
+
+{navLinks.map((link) =>
+link.submenu ? (
+
+<div key={link.name} className="border-b">
+
+<button
+onClick={() =>
+setOpenMobileMenu(
+openMobileMenu === link.name ? null : link.name
+)
+}
+className="w-full text-left px-4 py-3 text-sm font-medium"
+>
+{link.name}
+</button>
+
+{openMobileMenu === link.name && (
+
+<div className="pl-6 pb-2">
+
+{link.submenu.map((sub) => (
+
+<Link
+key={sub.path}
+to={sub.path}
+onClick={() => {
+setIsMenuOpen(false);
+setOpenMobileMenu(null);
+}}
+className="block py-2 text-sm text-muted-foreground hover:text-primary"
+>
+{sub.name}
+</Link>
+
+))}
+
+</div>
+)}
+
+</div>
+
+) : (
+
+<Link
+key={link.path}
+to={link.path}
+onClick={() => setIsMenuOpen(false)}
+className="px-4 py-3 text-sm border-b hover:bg-muted"
+>
+{link.name}
+</Link>
+
+)
+)}
+
+</div>
+
+</motion.div>
+
+)}
+</AnimatePresence>
+
+</div>
+
+</nav>
+
+</header>
+
+);
 };

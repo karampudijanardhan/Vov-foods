@@ -26,18 +26,18 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("https://vov-foods-1.onrender.com/api/auth/login", form);
+      const res = await axios.post(
+        "https://vov-foods-1.onrender.com/api/auth/login",
+        form
+      );
 
-      // 🔐 Save token (JWT)
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("username", res.data.user.username);
 
-      // ✅ Notify Navbar: login just happened
       window.dispatchEvent(new Event("login-success"));
 
       alert("Login successful ✅");
 
-      // ✅ redirect to HOME (localhost:8080)
       navigate("/");
     } catch (err: any) {
       console.error("Login error:", err);
@@ -96,12 +96,24 @@ const Login: React.FC = () => {
           </button>
         </form>
 
+        {/* Signup */}
         <p className="text-sm text-center mt-5 text-muted-foreground">
           Don’t have an account?{" "}
           <Link to="/signup" className="text-primary font-medium hover:underline">
             Sign up
           </Link>
         </p>
+
+        {/* 🔐 Admin Login Button */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate("/admin-login")}
+            className="w-full py-2 mt-2 rounded-lg border border-primary text-primary font-medium hover:bg-primary hover:text-white transition"
+          >
+            Admin Login
+          </button>
+        </div>
+
       </div>
     </div>
   );

@@ -6,38 +6,67 @@ import { ProductGrid } from "@/components/product/ProductGrid";
 import { mockProducts } from "@/data/mockProducts";
 import { categories } from "@/data/categories";
 
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 const Home = () => {
-  const featuredProducts = mockProducts.filter((p) => p.badges.includes("Best Seller")).slice(0, 4);
-  const newArrivals = mockProducts.slice(0, 8);
+
+  // backend products
+  const [apiProducts,setApiProducts] = useState<any[]>([]);
+
+  useEffect(()=>{
+
+    axios.get("http://localhost:5000/api/products")
+    .then(res=>{
+      setApiProducts(res.data);
+    })
+    .catch(()=>{
+      console.log("Using mock products fallback");
+    });
+
+  },[]);
+
+  // combine backend + mock products
+  const allProducts = apiProducts.length
+    ? [...apiProducts, ...mockProducts]
+    : mockProducts;
+
+  const featuredProducts = allProducts
+    .filter((p:any)=>p.badges?.includes("Best Seller"))
+    .slice(0,4);
+
+  const newArrivals = allProducts.slice(0,8);
 
   return (
     <div className="min-h-screen">
+
       {/* Hero Section */}
       <section className="relative overflow-hidden gradient-warm">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-primary blur-3xl" />
           <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-secondary blur-3xl" />
         </div>
-        
+
         <div className="container relative py-16 lg:py-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               className="space-y-6"
             >
+
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                 <Sparkles className="w-4 h-4" />
                 100% Homemade • No Preservatives
               </div>
-              
+
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                Authentic{" "}
-                <span>Telugu</span> Flavors,{" "}
+                Authentic <span>Telugu</span> Flavors,{" "}
                 <span>Homemade</span> with Love
               </h1>
-              
+
               <p className="text-lg text-muted-foreground max-w-xl">
                 Experience the rich taste of traditional Indian pickles, aromatic spice powders, 
                 and melt-in-mouth sweets — made with recipes passed down through generations.
@@ -50,6 +79,7 @@ const Home = () => {
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
+
                 <Link to="/offers">
                   <Button size="lg" variant="outline" className="gap-2">
                     View Offers
@@ -70,7 +100,9 @@ const Home = () => {
                   </div>
                 ))}
               </div>
+
             </motion.div>
+
 
             <motion.div
               initial={{ opacity: 0, x: 50 }}
@@ -80,13 +112,13 @@ const Home = () => {
             >
               <div className="relative aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-0 rounded-full gradient-saffron opacity-20 blur-3xl animate-pulse" />
+
                 <img
                   src="https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=600&h=600&fit=crop"
                   alt="Homemade Indian Pickles"
                   className="relative w-full h-full object-cover rounded-3xl shadow-2xl"
                 />
-                
-                {/* Floating badges */}
+
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
@@ -95,7 +127,7 @@ const Home = () => {
                   <p className="font-display font-bold text-lg">50+</p>
                   <p className="text-xs text-muted-foreground">Products</p>
                 </motion.div>
-                
+
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 1 }}
@@ -104,13 +136,16 @@ const Home = () => {
                   <p className="font-display font-bold text-lg">4.9★</p>
                   <p className="text-xs text-muted-foreground">Rating</p>
                 </motion.div>
+
               </div>
             </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* Categories Section */}
+
+      {/* Categories */}
       <section className="py-16 bg-background">
         <div className="container">
           <div className="text-center mb-12">
@@ -123,7 +158,7 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {categories.map((category, index) => (
+            {categories.map((category,index)=>(
               <motion.div
                 key={category.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -154,83 +189,25 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
+
+      {/* Best Sellers */}
       <section className="py-16 gradient-warm">
         <div className="container">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-foreground">Best Sellers</h2>
-              <p className="text-muted-foreground">Our most loved products by customers</p>
-            </div>
-            <Link to="/products">
-              <Button variant="outline" className="gap-2">
-                View All <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
-          
           <ProductGrid products={featuredProducts} />
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16 bg-background">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Why Choose VOV FOODS?
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: "🏠",
-                title: "100% Homemade",
-                description: "Prepared in traditional kitchen with authentic recipes",
-              },
-              {
-                icon: "🌿",
-                title: "No Preservatives",
-                description: "Pure ingredients, no artificial additives or chemicals",
-              },
-              {
-                icon: "👵",
-                title: "Traditional Recipes",
-                description: "Passed down through generations of Telugu homes",
-              },
-              {
-                icon: "🚚",
-                title: "Fast Delivery",
-                description: "Fresh products delivered right to your doorstep",
-              },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-card p-6 rounded-xl shadow-card text-center"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* New Arrivals */}
       <section className="py-16 gradient-warm">
         <div className="container">
+
           <ProductGrid
             products={newArrivals}
             title="New Arrivals"
             description="Discover our latest additions to the menu"
           />
-          
+
           <div className="text-center mt-8">
             <Link to="/products">
               <Button size="lg" className="gradient-saffron hover:opacity-90 gap-2">
@@ -239,33 +216,10 @@ const Home = () => {
               </Button>
             </Link>
           </div>
+
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-spice-brown text-cream">
-        <div className="container text-center space-y-6">
-          <h2 className="font-display text-3xl md:text-4xl font-bold">
-            Ready to Taste Authentic Telugu Flavors?
-          </h2>
-          <p className="text-lg opacity-80 max-w-2xl mx-auto">
-            Join thousands of happy customers who have brought the taste of traditional 
-            Indian kitchen to their homes.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/products">
-              <Button size="lg" className="gradient-saffron hover:opacity-90">
-                Shop Now
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button size="lg" variant="outline" className="border-cream gradient-saffron caret-blue-500 text-cream hover:bg-cream hover:text-spice-brown">
-                Contact Us
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
