@@ -12,24 +12,31 @@ const sendOrderSMS = async (order) => {
 
   try {
 
-    const customerPhone = `+91${order.phone}`;
+    const phone = order.phone || order.mobile;
+
+    if (!phone) {
+      console.log("❌ No phone number in order");
+      return;
+    }
+
+    const customerPhone = `+91${phone}`;
     const adminPhone = `+91${process.env.ADMIN_PHONE}`;
 
-    // CUSTOMER MESSAGE
+    console.log("📩 Sending SMS to:", customerPhone);
+
     const customerMessage =
-`Vov Foods Order Confirmed
+`VOV Foods Order Confirmed
 
 Order ID: ${order.orderRef}
 Amount: ₹${order.totalAmount}
 
 Thank you for ordering!`;
 
-    // ADMIN MESSAGE (SHORT VERSION)
     const adminMessage =
-`New Order - VovFoods
+`New Order - VOV Foods
 ID: ${order.orderRef}
 Customer: ${order.name}
-Phone: ${order.phone}
+Phone: ${phone}
 Total: ₹${order.totalAmount}`;
 
     // Send SMS to customer
@@ -54,7 +61,7 @@ Total: ₹${order.totalAmount}`;
 
   } catch (error) {
 
-    console.log("❌ Twilio SMS error:", error.message);
+    console.log("❌ Twilio SMS error:", error);
 
   }
 
