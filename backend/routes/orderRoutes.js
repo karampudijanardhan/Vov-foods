@@ -9,25 +9,19 @@ import {
 
 const router = express.Router();
 
-/*
-|--------------------------------------------------------------------------
-| ORDER ROUTES
-|--------------------------------------------------------------------------
-*/
+// Create order
+router.post("/", createOrder);
 
-// Create new order
-router.post("/create", createOrder);
-
-// Get all orders (admin)
+// Get all orders
 router.get("/", getOrders);
 
-// Get orders by username
-router.get("/user/:username", getMyOrders);
+// Get user orders
+router.get("/my/:username", getMyOrders);
 
-// Track order by ID
+// Track order
 router.get("/track/:orderId", trackOrder);
 
-// Update order status (admin)
+// Update order status
 router.put("/status/:id", updateOrderStatus);
 
 export default router;
