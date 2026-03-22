@@ -52,94 +52,25 @@ export const Navbar = () => {
 
   const [showLogout, setShowLogout] = useState(false);
 
-  const clickCountRef = useRef(0);
-  const clickTimerRef = useRef<number | null>(null);
-
-  const handleAdminClicks = async () => {
-
-    clickCountRef.current += 1;
-
-    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-
-    clickTimerRef.current = window.setTimeout(() => {
-      clickCountRef.current = 0;
-    }, 1500);
-
-    if (clickCountRef.current === 3) {
-
-      clickCountRef.current = 0;
-
-      const pass = prompt("Admin access code:");
-      if (pass !== "vov123") {
-        alert("❌ Wrong code");
-        return;
-      }
-
-      const orderRef = prompt("Enter Order ID:");
-      if (!orderRef) return;
-
-      const status = prompt(
-        "Enter Status:\nPLACED\nPACKING\nSHIPPED\nOUT_FOR_DELIVERY\nDELIVERED"
-      );
-
-      if (!status) return;
-
-      try {
-
-        await axios.put("https://vov-foods-1.onrender.com/api/order/status", {
-          orderRef: orderRef.trim(),
-          status: status.trim(),
-        });
-
-        alert("✅ Order status updated successfully!");
-
-      } catch {
-
-        alert("❌ Failed to update order");
-
-      }
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    setShowLogout(false);
+    navigate("/");
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setShowLogout(!!token);
+  }, []);
+
   const handleSearch = (e: React.FormEvent) => {
-
     e.preventDefault();
-
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     }
-
   };
-
-  const handleLogout = () => {
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-
-    setShowLogout(false);
-
-    alert("Logged out 👋");
-    navigate("/");
-
-  };
-
-  useEffect(() => {
-
-    const checkLogin = () => {
-      const token = localStorage.getItem("token");
-      setShowLogout(!!token);
-    };
-
-    checkLogin();
-
-    window.addEventListener("login-success", checkLogin);
-
-    return () => {
-      window.removeEventListener("login-success", checkLogin);
-    };
-
-  }, []);
 
   return (
 
@@ -171,39 +102,25 @@ export const Navbar = () => {
 </div>
 </div>
 
-{/* MAIN NAVBAR */}
-<nav className="bg-background/95 backdrop-blur-md border-b shadow-sm">
+{/* NAVBAR */}
+<nav className="bg-background border-b">
 
 <div className="container py-4">
 
 {/* LOGO + SEARCH + CART */}
 <div className="flex items-center justify-between gap-4">
 
-<Link to="/" className="flex items-center gap-2 shrink-0">
+<Link to="/" className="flex items-center gap-2">
 
 <img
 src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
 className="h-10"
 />
 
-<div className="hidden sm:block">
-
-<h1
-className="font-bold text-xl cursor-pointer"
-onClick={handleAdminClicks}
->
-VOV FOODS
-</h1>
-
-<p className="text-xs text-muted-foreground">
-TASTE OF VILLAGE FOODS
-</p>
-
-</div>
-
 </Link>
 
-<form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4">
+{/* SEARCH */}
+<form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">
 
 <div className="relative w-full">
 
@@ -211,7 +128,7 @@ TASTE OF VILLAGE FOODS
 
 <Input
 type="search"
-placeholder="Search pickles, powders, sweets..."
+placeholder="Search pickles..."
 value={searchQuery}
 onChange={(e) => setSearchQuery(e.target.value)}
 className="pl-10"
@@ -221,6 +138,7 @@ className="pl-10"
 
 </form>
 
+{/* RIGHT SIDE */}
 <div className="flex items-center gap-2">
 
 <Link to="/cart">
@@ -229,18 +147,36 @@ className="pl-10"
 <ShoppingCart className="w-5 h-5" />
 
 {itemCount > 0 && (
-<motion.span
-initial={{ scale: 0 }}
-animate={{ scale: 1 }}
-className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-xs flex items-center justify-center"
->
+<span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-xs flex items-center justify-center">
 {itemCount}
-</motion.span>
+</span>
 )}
 
 </Button>
 </Link>
 
+{/* DESKTOP LOGIN */}
+<div className="hidden lg:flex gap-2">
+
+{!showLogout ? (
+<Link to="/login">
+<Button size="sm">Login</Button>
+</Link>
+) : (
+<>
+<Link to="/my-orders">
+<Button size="sm">My Orders</Button>
+</Link>
+
+<Button size="sm" onClick={handleLogout}>
+Logout
+</Button>
+</>
+)}
+
+</div>
+
+{/* MOBILE MENU BUTTON */}
 <Button
 variant="ghost"
 size="icon"
@@ -251,27 +187,46 @@ onClick={() => setIsMenuOpen(!isMenuOpen)}
 </Button>
 
 </div>
-</div>
-
-{/* MOBILE SEARCH */}
-<div className="md:hidden mt-3">
-<form onSubmit={handleSearch} className="w-full">
-
-<div className="relative w-full">
-
-<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-
-<Input
-type="search"
-placeholder="Search pickles, powders, sweets..."
-value={searchQuery}
-onChange={(e) => setSearchQuery(e.target.value)}
-className="pl-10 w-full"
-/>
 
 </div>
 
-</form>
+{/* DESKTOP NAV */}
+<div className="hidden lg:flex gap-6 mt-4 border-t pt-4">
+
+{navLinks.map((link) =>
+link.submenu ? (
+
+<div key={link.name} className="relative group">
+
+<span className="cursor-pointer">{link.name}</span>
+
+<div className="absolute hidden group-hover:block bg-white shadow rounded mt-2">
+
+{link.submenu.map((sub) => (
+
+<Link
+key={sub.path}
+to={sub.path}
+className="block px-4 py-2 hover:bg-gray-100"
+>
+{sub.name}
+</Link>
+
+))}
+
+</div>
+
+</div>
+
+) : (
+
+<Link key={link.path} to={link.path}>
+{link.name}
+</Link>
+
+)
+)}
+
 </div>
 
 {/* MOBILE MENU */}
@@ -279,10 +234,10 @@ className="pl-10 w-full"
 {isMenuOpen && (
 
 <motion.div
-initial={{ height: 0, opacity: 0 }}
-animate={{ height: "auto", opacity: 1 }}
-exit={{ height: 0, opacity: 0 }}
-className="lg:hidden overflow-hidden border-t mt-4 pt-4"
+initial={{ height: 0 }}
+animate={{ height: "auto" }}
+exit={{ height: 0 }}
+className="lg:hidden border-t mt-4"
 >
 
 <div className="flex flex-col">
@@ -293,30 +248,27 @@ link.submenu ? (
 <div key={link.name} className="border-b">
 
 <button
+className="px-4 py-3 text-left w-full"
 onClick={() =>
 setOpenMobileMenu(
 openMobileMenu === link.name ? null : link.name
 )
 }
-className="w-full text-left px-4 py-3 text-sm font-medium"
 >
 {link.name}
 </button>
 
 {openMobileMenu === link.name && (
 
-<div className="pl-6 pb-2">
+<div className="pl-6">
 
 {link.submenu.map((sub) => (
 
 <Link
 key={sub.path}
 to={sub.path}
-onClick={() => {
-setIsMenuOpen(false);
-setOpenMobileMenu(null);
-}}
-className="block py-2 text-sm text-muted-foreground hover:text-primary"
+className="block py-2"
+onClick={() => setIsMenuOpen(false)}
 >
 {sub.name}
 </Link>
@@ -324,6 +276,7 @@ className="block py-2 text-sm text-muted-foreground hover:text-primary"
 ))}
 
 </div>
+
 )}
 
 </div>
@@ -333,8 +286,8 @@ className="block py-2 text-sm text-muted-foreground hover:text-primary"
 <Link
 key={link.path}
 to={link.path}
+className="px-4 py-3 border-b"
 onClick={() => setIsMenuOpen(false)}
-className="px-4 py-3 text-sm border-b hover:bg-muted"
 >
 {link.name}
 </Link>
@@ -345,8 +298,8 @@ className="px-4 py-3 text-sm border-b hover:bg-muted"
 {showLogout && (
 <Link
 to="/my-orders"
+className="px-4 py-3 border-b"
 onClick={() => setIsMenuOpen(false)}
-className="px-4 py-3 text-sm border-b hover:bg-muted"
 >
 My Orders
 </Link>
@@ -356,8 +309,8 @@ My Orders
 
 <Link
 to="/login"
+className="px-4 py-3 border-b"
 onClick={() => setIsMenuOpen(false)}
-className="px-4 py-3 text-sm border-b hover:bg-muted"
 >
 Login
 </Link>
@@ -369,7 +322,7 @@ onClick={() => {
 handleLogout();
 setIsMenuOpen(false);
 }}
-className="px-4 py-3 text-sm border-b text-left hover:bg-muted"
+className="px-4 py-3 text-left"
 >
 Logout
 </button>
