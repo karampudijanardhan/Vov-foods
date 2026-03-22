@@ -203,7 +203,6 @@ TASTE OF VILLAGE FOODS
 
 </Link>
 
-{/* DESKTOP SEARCH */}
 <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4">
 
 <div className="relative w-full">
@@ -222,7 +221,6 @@ className="pl-10"
 
 </form>
 
-{/* RIGHT SIDE */}
 <div className="flex items-center gap-2">
 
 <Link to="/cart">
@@ -242,27 +240,6 @@ className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-xs flex 
 
 </Button>
 </Link>
-
-{!showLogout ? (
-<Link to="/login">
-<Button variant="outline" size="sm">Login</Button>
-</Link>
-) : (
-<>
-<Link to="/my-orders">
-<Button variant="outline" size="sm">My Orders</Button>
-</Link>
-
-<Button
-variant="outline"
-size="sm"
-onClick={handleLogout}
-className="border-destructive text-destructive"
->
-Logout
-</Button>
-</>
-)}
 
 <Button
 variant="ghost"
@@ -295,46 +272,6 @@ className="pl-10 w-full"
 </div>
 
 </form>
-</div>
-
-{/* DESKTOP NAV */}
-<div className="hidden lg:flex items-center gap-1 mt-4 pt-4 border-t">
-
-{navLinks.map((link) =>
-link.submenu ? (
-<div key={link.name} className="relative group">
-
-<span className="px-4 py-2 text-sm font-medium cursor-pointer">
-{link.name}
-</span>
-
-<div className="absolute left-0 mt-2 hidden group-hover:block bg-white border rounded-lg shadow-md min-w-[180px]">
-
-{link.submenu.map((sub) => (
-<Link
-key={sub.path}
-to={sub.path}
-className="block px-4 py-2 text-sm hover:bg-muted"
->
-{sub.name}
-</Link>
-))}
-
-</div>
-</div>
-) : (
-
-<Link
-key={link.path}
-to={link.path}
-className="px-4 py-2 text-sm font-medium"
->
-{link.name}
-</Link>
-
-)
-)}
-
 </div>
 
 {/* MOBILE MENU */}
@@ -403,6 +340,40 @@ className="px-4 py-3 text-sm border-b hover:bg-muted"
 </Link>
 
 )
+)}
+
+{showLogout && (
+<Link
+to="/my-orders"
+onClick={() => setIsMenuOpen(false)}
+className="px-4 py-3 text-sm border-b hover:bg-muted"
+>
+My Orders
+</Link>
+)}
+
+{!showLogout ? (
+
+<Link
+to="/login"
+onClick={() => setIsMenuOpen(false)}
+className="px-4 py-3 text-sm border-b hover:bg-muted"
+>
+Login
+</Link>
+
+) : (
+
+<button
+onClick={() => {
+handleLogout();
+setIsMenuOpen(false);
+}}
+className="px-4 py-3 text-sm border-b text-left hover:bg-muted"
+>
+Logout
+</button>
+
 )}
 
 </div>
