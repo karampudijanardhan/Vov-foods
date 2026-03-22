@@ -29,10 +29,6 @@ const Home = () => {
     ? [...apiProducts, ...mockProducts]
     : mockProducts;
 
-  const featuredProducts = allProducts
-    .filter((p:any)=>p.badges?.includes("Best Seller"))
-    .slice(0,4);
-
   const newArrivals = allProducts.slice(0,8);
 
   return (
@@ -41,7 +37,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden gradient-warm">
 
-        {/* LEFT HERO BACKGROUND IMAGE */}
+        {/* Background Image */}
         <div
           className="absolute left-0 top-0 w-full lg:w-1/2 h-full bg-cover bg-center opacity-60 saturate-150 pointer-events-none"
           style={{
@@ -50,7 +46,6 @@ const Home = () => {
           }}
         />
 
-        {/* Decorative blur shapes */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-primary blur-3xl" />
           <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-secondary blur-3xl" />
@@ -59,6 +54,7 @@ const Home = () => {
         <div className="container relative py-16 lg:py-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
 
+            {/* TEXT AREA */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -66,17 +62,17 @@ const Home = () => {
               className="space-y-6"
             >
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 text-black text-sm font-semibold shadow">
                 <Sparkles className="w-4 h-4" />
                 100% Homemade • No Preservatives
               </div>
 
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-                Authentic <span>Telugu</span> Flavors,{" "}
-                <span>Homemade</span> with Love
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-black leading-tight">
+                Authentic <span className="text-red-600">Telugu</span> Flavors,{" "}
+                <span className="text-orange-600">Homemade</span> with Love
               </h1>
 
-              <p className="text-lg text-muted-foreground max-w-xl">
+              <p className="text-lg font-semibold text-black max-w-xl">
                 Experience the rich taste of traditional Indian pickles, aromatic spice powders,
                 and melt-in-mouth sweets — made with recipes passed down through generations.
               </p>
@@ -103,7 +99,7 @@ const Home = () => {
                   { icon: Shield, text: "Fresh & Safe" },
                   { icon: Heart, text: "Made with Love" },
                 ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div key={text} className="flex items-center gap-2 text-sm text-black">
                     <Icon className="w-5 h-5 text-primary" />
                     <span>{text}</span>
                   </div>
@@ -112,7 +108,7 @@ const Home = () => {
 
             </motion.div>
 
-
+            {/* IMAGE SIDE */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
