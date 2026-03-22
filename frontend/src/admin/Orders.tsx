@@ -47,7 +47,6 @@ const Orders = () => {
 
       await axios.put(`${API}/status/${id}`,{status});
 
-      // update UI without refetch
       setOrders(prev =>
         prev.map(o =>
           o._id === id ? {...o,status} : o
@@ -92,11 +91,11 @@ const Orders = () => {
 
             <div
               key={order._id}
-              className="bg-card shadow-card rounded-xl p-6"
+              className="bg-card shadow-card rounded-xl p-4 sm:p-6"
             >
 
               {/* USER INFO */}
-              <div className="flex justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between mb-4 gap-2">
 
                 <div>
 
@@ -114,7 +113,7 @@ const Orders = () => {
 
                 </div>
 
-                <span className="px-3 py-1 rounded bg-muted text-sm">
+                <span className="px-3 py-1 rounded bg-muted text-sm w-fit">
                   {order.status}
                 </span>
 
@@ -123,7 +122,7 @@ const Orders = () => {
               {/* PRODUCT */}
               {item && (
 
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
 
                   <img
                     src={item.image || "https://via.placeholder.com/60"}

@@ -6,7 +6,6 @@ const Products = () => {
 
   const [products,setProducts] = useState<any[]>([]);
 
-  // Load products from backend
   useEffect(()=>{
 
     fetchProducts();
@@ -31,7 +30,6 @@ const Products = () => {
 
   };
 
-  // Delete product
   const deleteProduct = async(id:string)=>{
 
     try{
@@ -50,7 +48,6 @@ const Products = () => {
 
   };
 
-  // ✅ Reset stock (clear frontend storage)
   const resetStock = () => {
 
     localStorage.removeItem("products");
@@ -63,23 +60,69 @@ const Products = () => {
 
     <AdminLayout>
 
-      <div className="flex justify-between items-center mb-6">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
 
         <h1 className="text-2xl font-display text-spice-brown">
           Products
         </h1>
 
-        {/* Reset Stock Button */}
         <button
           onClick={resetStock}
-          className="px-4 py-2 rounded bg-secondary text-white"
+          className="px-4 py-2 rounded bg-secondary text-white w-fit"
         >
           Reset Stock
         </button>
 
       </div>
 
-      <div className="bg-card shadow-card rounded-xl overflow-hidden">
+      {/* ================= MOBILE VIEW ================= */}
+      <div className="grid gap-4 md:hidden">
+
+        {products.map((product:any)=>(
+
+          <div
+            key={product._id}
+            className="bg-card shadow-card rounded-xl p-4 flex items-center gap-4"
+          >
+
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-14 h-14 rounded object-cover"
+            />
+
+            <div className="flex-1">
+
+              <p className="font-semibold">
+                {product.name}
+              </p>
+
+              <p className="text-sm text-muted-foreground">
+                {product.category}
+              </p>
+
+              <p className="text-sm">
+                Stock: {product.stock}
+              </p>
+
+            </div>
+
+            <button
+              onClick={()=>deleteProduct(product._id)}
+              className="px-3 py-1 rounded bg-destructive text-white text-sm"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        ))}
+
+      </div>
+
+      {/* ================= DESKTOP TABLE ================= */}
+      <div className="hidden md:block bg-card shadow-card rounded-xl overflow-x-auto">
 
         <table className="w-full">
 
@@ -143,6 +186,7 @@ const Products = () => {
     </AdminLayout>
 
   );
+
 };
 
 export default Products;

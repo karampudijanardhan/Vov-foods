@@ -16,7 +16,7 @@ const Support = () => (
         {[
           { icon: MessageCircle, title: "WhatsApp Chat", desc: "Chat with us instantly", action: () => openWhatsAppChat(), btn: "Start Chat" },
           { icon: Phone, title: "Call Support", desc: "+91 7731983479", action: () => window.open("tel:+917731983479"), btn: "Call Now" },
-          { icon: Mail, title: "Email Support", desc: "janardhankarampudi@gmail.com", action: () => window.open("mailto:janardhankarampudi@gmail.com"), btn: "Send Email" },
+          { icon: Mail, title: "Email Support", desc: "vovfoods@gmail.com", action: () => window.open("mailto:vovfoods@gmail.com"), btn: "Send Email" },
           { icon: HelpCircle, title: "FAQ", desc: "Find quick answers", action: () => {}, btn: "View FAQ" },
         ].map(({ icon: Icon, title, desc, action, btn }) => (
           <div key={title} className="bg-card rounded-xl p-6 shadow-card text-center space-y-4">

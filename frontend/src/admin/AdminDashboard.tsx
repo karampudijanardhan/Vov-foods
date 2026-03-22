@@ -52,7 +52,8 @@ const AdminDashboard = () => {
         Admin Dashboard
       </h1>
 
-      <div className="grid grid-cols-3 gap-6">
+      {/* Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Orders */}
         <div className="bg-white p-6 rounded shadow text-center">

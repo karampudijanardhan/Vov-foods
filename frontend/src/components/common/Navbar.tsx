@@ -51,7 +51,6 @@ export const Navbar = () => {
   const itemCount = getItemCount();
 
   const [showLogout, setShowLogout] = useState(false);
-  const token = localStorage.getItem("token");
 
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef<number | null>(null);
@@ -127,14 +126,17 @@ export const Navbar = () => {
 
   useEffect(() => {
 
-    const onLoginSuccess = () => {
-      setShowLogout(true);
+    const checkLogin = () => {
+      const token = localStorage.getItem("token");
+      setShowLogout(!!token);
     };
 
-    window.addEventListener("login-success", onLoginSuccess);
+    checkLogin();
+
+    window.addEventListener("login-success", checkLogin);
 
     return () => {
-      window.removeEventListener("login-success", onLoginSuccess);
+      window.removeEventListener("login-success", checkLogin);
     };
 
   }, []);
@@ -201,6 +203,7 @@ TASTE OF VILLAGE FOODS
 
 </Link>
 
+{/* DESKTOP SEARCH */}
 <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md mx-4">
 
 <div className="relative w-full">
@@ -240,17 +243,16 @@ className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent text-xs flex 
 </Button>
 </Link>
 
-{token ? (
-<Link to="/my-orders">
-<Button variant="outline" size="sm">My Orders</Button>
-</Link>
-) : (
+{!showLogout ? (
 <Link to="/login">
 <Button variant="outline" size="sm">Login</Button>
 </Link>
-)}
+) : (
+<>
+<Link to="/my-orders">
+<Button variant="outline" size="sm">My Orders</Button>
+</Link>
 
-{token && (
 <Button
 variant="outline"
 size="sm"
@@ -259,6 +261,7 @@ className="border-destructive text-destructive"
 >
 Logout
 </Button>
+</>
 )}
 
 <Button
@@ -271,6 +274,27 @@ onClick={() => setIsMenuOpen(!isMenuOpen)}
 </Button>
 
 </div>
+</div>
+
+{/* MOBILE SEARCH */}
+<div className="md:hidden mt-3">
+<form onSubmit={handleSearch} className="w-full">
+
+<div className="relative w-full">
+
+<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
+<Input
+type="search"
+placeholder="Search pickles, powders, sweets..."
+value={searchQuery}
+onChange={(e) => setSearchQuery(e.target.value)}
+className="pl-10 w-full"
+/>
+
+</div>
+
+</form>
 </div>
 
 {/* DESKTOP NAV */}

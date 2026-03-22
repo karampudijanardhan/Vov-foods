@@ -7,7 +7,8 @@ const AdminLayout = ({ children }: any) => {
 
       <AdminSidebar />
 
-      <div className="flex-1 p-8">
+      {/* Content Area */}
+      <div className="flex-1 pt-20 lg:pt-8 p-4 sm:p-6 lg:p-8">
         {children}
       </div>
 

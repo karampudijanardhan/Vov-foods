@@ -20,6 +20,7 @@ interface Order {
 }
 
 const MyOrders = () => {
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,42 +31,50 @@ const MyOrders = () => {
 
   useEffect(() => {
 
-    const fetchOrders = async () => {
+   const fetchOrders = async () => {
 
-      try {
+  try {
 
-        const res = await axios.get(
-          `https://vov-foods-1.onrender.com/api/order/my/${username}`
-        );
+    const res = await axios.get(
+      `https://vov-foods-1.onrender.com/api/order/my/${username}`
+    );
 
-        // ✅ FIX: backend returns array directly
-        setOrders(res.data);
+    console.log("Orders API response:", res.data);
 
-      } catch (err) {
-
-        console.error("❌ Fetch orders failed:", err);
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-    if (!token || !username) {
-      setLoading(false);
-      return;
+    if (Array.isArray(res.data)) {
+      setOrders(res.data);
+    } else {
+      setOrders([]);
     }
 
-    fetchOrders();
+  } catch (err) {
+
+    console.error("Fetch orders failed:", err);
+    setOrders([]);
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
+    if (username && token) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
 
   }, [username, token]);
+
+
 
   if (!token || !username) {
     return (
       <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
+
         <div className="bg-card shadow-card rounded-xl p-8 text-center max-w-md w-full">
+
           <PackageSearch className="w-10 h-10 mx-auto text-primary mb-3" />
 
           <h2 className="text-xl font-display font-semibold text-spice-brown mb-2">
@@ -84,9 +93,12 @@ const MyOrders = () => {
           </button>
 
         </div>
+
       </div>
     );
   }
+
+
 
   if (loading) {
     return (
@@ -95,6 +107,8 @@ const MyOrders = () => {
       </div>
     );
   }
+
+
 
   return (
     <div className="min-h-screen bg-gradient-warm">
@@ -143,7 +157,7 @@ const MyOrders = () => {
 
               <ul className="text-sm space-y-1">
 
-                {order.items.map((item, i) => (
+                {(order.items || []).map((item, i) => (
                   <li key={i}>
                     {item.name} ({item.weight}) × {item.qty}
                   </li>

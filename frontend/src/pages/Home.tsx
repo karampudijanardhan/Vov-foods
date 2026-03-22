@@ -11,7 +11,6 @@ import axios from "axios";
 
 const Home = () => {
 
-  // backend products
   const [apiProducts,setApiProducts] = useState<any[]>([]);
 
   useEffect(()=>{
@@ -26,7 +25,6 @@ const Home = () => {
 
   },[]);
 
-  // combine backend + mock products
   const allProducts = apiProducts.length
     ? [...apiProducts, ...mockProducts]
     : mockProducts;
@@ -42,6 +40,17 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden gradient-warm">
+
+        {/* LEFT HERO BACKGROUND IMAGE */}
+        <div
+          className="absolute left-0 top-0 w-full lg:w-1/2 h-full bg-cover bg-center opacity-60 saturate-150 pointer-events-none"
+          style={{
+            backgroundImage:
+              "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSidOIadt2T69-SLvJfizMMYzULZKyXSfOWZHMe89zjUy_XZE0hBG-XnjM&s=10')",
+          }}
+        />
+
+        {/* Decorative blur shapes */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-primary blur-3xl" />
           <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-secondary blur-3xl" />
@@ -68,7 +77,7 @@ const Home = () => {
               </h1>
 
               <p className="text-lg text-muted-foreground max-w-xl">
-                Experience the rich taste of traditional Indian pickles, aromatic spice powders, 
+                Experience the rich taste of traditional Indian pickles, aromatic spice powders,
                 and melt-in-mouth sweets — made with recipes passed down through generations.
               </p>
 
@@ -113,29 +122,13 @@ const Home = () => {
               <div className="relative aspect-square max-w-lg mx-auto">
                 <div className="absolute inset-0 rounded-full gradient-saffron opacity-20 blur-3xl animate-pulse" />
 
-                <img
-                  src="https://images.unsplash.com/photo-1589647363585-f4a7d3877b10?w=600&h=600&fit=crop"
-                  alt="Homemade Indian Pickles"
-                  className="relative w-full h-full object-cover rounded-3xl shadow-2xl"
-                />
-
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute -left-4 top-1/4 bg-card px-4 py-3 rounded-xl shadow-lg"
-                >
-                  <p className="font-display font-bold text-lg">50+</p>
-                  <p className="text-xs text-muted-foreground">Products</p>
-                </motion.div>
-
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                  className="absolute -right-4 bottom-1/4 bg-card px-4 py-3 rounded-xl shadow-lg"
-                >
-                  <p className="font-display font-bold text-lg">4.9★</p>
-                  <p className="text-xs text-muted-foreground">Rating</p>
-                </motion.div>
+                <div className="relative w-full h-[500px] lg:h-[630px]">
+                  <img
+                    src="/WhatsApp Image 2026-03-22 at 12.47.39.jpeg"
+                    alt="Homemade Indian Pickles"
+                    className="w-full h-full object-cover rounded-3xl shadow-2xl"
+                  />
+                </div>
 
               </div>
             </motion.div>
@@ -148,6 +141,7 @@ const Home = () => {
       {/* Categories */}
       <section className="py-16 bg-background">
         <div className="container">
+
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
               Shop by Category
@@ -186,14 +180,7 @@ const Home = () => {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-
-      {/* Best Sellers */}
-      <section className="py-16 gradient-warm">
-        <div className="container">
-          <ProductGrid products={featuredProducts} />
         </div>
       </section>
 

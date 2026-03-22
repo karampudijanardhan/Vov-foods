@@ -31,7 +31,7 @@ const Contact = () => (
           <Mail className="w-6 h-6 text-primary shrink-0" />
           <div>
             <h3 className="font-semibold">Email</h3>
-            <a href="mailto:janardhankarampudi@gmail.com" className="text-muted-foreground hover:text-primary">janardhankarampudi@gmail.com</a>
+            <a href="vovfoods@gmail.com" className="text-muted-foreground hover:text-primary">vovfoods@gmail.com</a>
           </div>
         </div>
         <Button onClick={() => openWhatsAppChat()} className="w-full gradient-saffron">Chat on WhatsApp</Button>

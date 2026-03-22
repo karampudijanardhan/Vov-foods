@@ -28,19 +28,19 @@ export const Footer = () => {
             </p>
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://www.facebook.com/share/1CWUYD2zF2/"
                 className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/vovfoods?igsh=bXFzM2ptZDl5NDBr"
                 className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="http://www.youtube.com/@VOVFOODS"
                 className="w-10 h-10 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
               >
                 <Youtube className="w-5 h-5" />
@@ -126,7 +126,7 @@ export const Footer = () => {
                   href="mailto:janardhankarampudi@gmail.com"
                   className="text-sm opacity-80 hover:opacity-100"
                 >
-                  janardhankarampudi@gmail.com
+                  vovfoods@gmail.com
                 </a>
               </li>
             </ul>
