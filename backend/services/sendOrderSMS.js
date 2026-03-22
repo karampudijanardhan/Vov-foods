@@ -1,40 +1,60 @@
-import axios from "axios";
+import dotenv from "dotenv";
+import twilio from "twilio";
+
+dotenv.config();
+
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 const sendOrderSMS = async (order) => {
 
-  console.log("📩 SMS function started");
-
   try {
 
-      console.log("Order data:", order);
-      console.log("API KEY:", process.env.FAST2SMS_API_KEY);
+    const customerPhone = `+91${order.phone}`;
+    const adminPhone = `+91${process.env.ADMIN_PHONE}`;
 
-    const phone = order.phone;
+    // CUSTOMER MESSAGE
+    const customerMessage =
+`Vov Foods Order Confirmed
 
-    console.log("Customer phone:", phone);
+Order ID: ${order.orderRef}
+Amount: ₹${order.totalAmount}
 
-    const response = await axios.post(
-      "https://www.fast2sms.com/dev/bulkV2",
-      {
-        route: "q",
-        message: `Vov Foods order ${order.orderRef} confirmed`,
-        language: "english",
-        flash: 0,
-        numbers: phone
-      },
-      {
-        headers: {
-          authorization: process.env.FAST2SMS_API_KEY,
-          "Content-Type": "application/json"
-        }
-      }
-    );
+Thank you for ordering!`;
 
-    console.log("SMS response:", response.data);
+    // ADMIN MESSAGE (SHORT VERSION)
+    const adminMessage =
+`New Order - VovFoods
+ID: ${order.orderRef}
+Customer: ${order.name}
+Phone: ${order.phone}
+Total: ₹${order.totalAmount}`;
+
+    // Send SMS to customer
+    const customerSMS = await client.messages.create({
+      body: customerMessage,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: customerPhone
+    });
+
+    console.log("Customer SMS SID:", customerSMS.sid);
+
+    // Send SMS to admin
+    const adminSMS = await client.messages.create({
+      body: adminMessage,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: adminPhone
+    });
+
+    console.log("Admin SMS SID:", adminSMS.sid);
+
+    console.log("✅ SMS process completed");
 
   } catch (error) {
 
-    console.log("❌ SMS error:", error.response?.data || error.message);
+    console.log("❌ Twilio SMS error:", error.message);
 
   }
 

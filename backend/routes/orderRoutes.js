@@ -3,7 +3,8 @@ import {
   createOrder,
   getOrders,
   getMyOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  trackOrder
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -16,6 +17,9 @@ router.get("/", getOrders);
 
 // Get user orders
 router.get("/my/:username", getMyOrders);
+
+// Track order
+router.get("/track/:orderId", trackOrder);
 
 // Update order status
 router.put("/status/:id", updateOrderStatus);

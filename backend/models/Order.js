@@ -2,33 +2,34 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
 
- orderRef:String,
- username:String,
- name:String,
- mobile:String,
- address:String,
+  orderRef: String,
 
- items:[{
-  productId:String,
-  name:String,
-  image:String,
-  qty:Number,
-  weight:String,
-  price:Number
- }],
+  username: String,
 
- totalAmount:Number,
+  name: String,
 
- status:{
-  type:String,
-  default:"PLACED"
- },
+  phone: String,   // ⭐ THIS IS MISSING
 
- createdAt:{
-  type:Date,
-  default:Date.now
- }
+  address: String,
 
-});
+  items: [
+    {
+      productId: String,
+      name: String,
+      image: String,
+      qty: Number,
+      weight: String,
+      price: Number
+    }
+  ],
 
-export default mongoose.model("Order",orderSchema);
+  totalAmount: Number,
+
+  status: {
+    type: String,
+    default: "PLACED"
+  }
+
+}, { timestamps: true });
+
+export default mongoose.model("Order", orderSchema);
