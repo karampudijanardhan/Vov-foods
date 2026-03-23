@@ -102,7 +102,7 @@ const TrackOrder = () => {
 
       <section className="container py-12 max-w-2xl">
 
-        <div className="bg-card rounded-xl p-8 shadow-card">
+        <div className="bg-card rounded-xl p-8 shadow-card border-2 border-gray-300 hover:border-orange-400 transition">
 
           {loading && (
             <p className="text-center text-muted-foreground">

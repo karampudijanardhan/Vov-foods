@@ -10,14 +10,14 @@ export const WhatsAppButton = () => {
       animate={{ scale: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center"
+      className="fixed bottom-16 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center"
       aria-label="Chat on WhatsApp"
     >
-      <MessageCircle className="w-7 h-7 fill-current" />
+      <MessageCircle className="w-7 h-7 fill-current mt-2 " />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-accent animate-pulse"
+        className="absolute -top-4 -right-2 w-4 h-4 rounded-full bg-accent animate-pulse"
       />
     </motion.button>
   );

@@ -3,42 +3,36 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e:any)=>{
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try{
-
+    try {
       const res = await axios.post(
         "https://vov-foods-1.onrender.com/api/admin/login",
-        {email,password}
+        { email, password }
       );
 
-      localStorage.setItem("adminToken",res.data.token);
+      localStorage.setItem("adminToken", res.data.token);
 
       alert("Admin Login Success");
 
       navigate("/admin-dashboard");
-
-    }catch(err:any){
-
+    } catch (err: any) {
+      console.error(err);
       alert("Invalid Admin");
-
     }
-  }
+  };
 
   return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-warm px-4 overflow-x-hidden">
+      <div className="w-full max-w-md bg-card text-card-foreground rounded-xl shadow-card border-2 border-gray-300 hover:border-orange-400 transition p-8">
 
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-
-        <h2 className="text-2xl font-bold mb-6 text-center">
+        <h2 className="text-2xl font-display text-center mb-6 text-spice-brown">
           Admin Login
         </h2>
 
@@ -48,8 +42,8 @@ const AdminLogin = () => {
             type="email"
             placeholder="Admin Email"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
-            className="w-full border p-2 rounded"
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border border-input px-4 py-2 rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             required
           />
 
@@ -57,13 +51,14 @@ const AdminLogin = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
-            className="w-full border p-2 rounded"
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-input px-4 py-2 rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             required
           />
 
           <button
-            className="w-full bg-black text-white py-2 rounded"
+            type="submit"
+            className="w-full py-2 rounded-lg gradient-saffron text-primary-foreground font-medium shadow-warm hover:shadow-hover transition"
           >
             Login
           </button>
@@ -71,9 +66,7 @@ const AdminLogin = () => {
         </form>
 
       </div>
-
     </div>
-
   );
 };
 

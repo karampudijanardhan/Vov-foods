@@ -18,7 +18,11 @@ const Login: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -48,18 +52,22 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-warm px-4">
-      <div className="w-full max-w-md bg-card text-card-foreground rounded-xl shadow-card p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-warm px-4 overflow-x-hidden">
+
+      <div className="w-full max-w-md bg-card text-card-foreground rounded-xl shadow-card border-2 border-gray-300 hover:border-orange-400 transition p-8">
+
         <h2 className="text-2xl font-display text-center mb-6 text-spice-brown">
           Login
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {/* Username */}
           <div>
             <label className="block text-sm mb-1 text-muted-foreground">
               Username
             </label>
+
             <input
               type="text"
               name="username"
@@ -76,6 +84,7 @@ const Login: React.FC = () => {
             <label className="block text-sm mb-1 text-muted-foreground">
               Password
             </label>
+
             <input
               type="password"
               name="password"
@@ -94,17 +103,21 @@ const Login: React.FC = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+
         </form>
 
         {/* Signup */}
         <p className="text-sm text-center mt-5 text-muted-foreground">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-primary font-medium hover:underline">
+          <Link
+            to="/signup"
+            className="text-primary font-medium hover:underline"
+          >
             Sign up
           </Link>
         </p>
 
-        {/* 🔐 Admin Login Button */}
+        {/* Admin Login */}
         <div className="mt-6 text-center">
           <button
             onClick={() => navigate("/admin-login")}
@@ -115,6 +128,7 @@ const Login: React.FC = () => {
         </div>
 
       </div>
+
     </div>
   );
 };

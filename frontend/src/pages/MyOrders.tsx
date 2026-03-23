@@ -30,35 +30,28 @@ const MyOrders = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get(
+          `https://vov-foods-1.onrender.com/api/order/my/${username}`
+        );
 
-   const fetchOrders = async () => {
+        console.log("Orders API response:", res.data);
 
-  try {
+        if (Array.isArray(res.data)) {
+          setOrders(res.data);
+        } else {
+          setOrders([]);
+        }
 
-    const res = await axios.get(
-      `https://vov-foods-1.onrender.com/api/order/my/${username}`
-    );
+      } catch (err) {
+        console.error("Fetch orders failed:", err);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    console.log("Orders API response:", res.data);
-
-    if (Array.isArray(res.data)) {
-      setOrders(res.data);
-    } else {
-      setOrders([]);
-    }
-
-  } catch (err) {
-
-    console.error("Fetch orders failed:", err);
-    setOrders([]);
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-};
     if (username && token) {
       fetchOrders();
     } else {
@@ -67,13 +60,11 @@ const MyOrders = () => {
 
   }, [username, token]);
 
-
-
   if (!token || !username) {
     return (
       <div className="min-h-screen bg-gradient-warm flex items-center justify-center">
 
-        <div className="bg-card shadow-card rounded-xl p-8 text-center max-w-md w-full">
+        <div className="bg-card shadow-card border-2 border-gray-300 rounded-xl p-8 text-center max-w-md w-full">
 
           <PackageSearch className="w-10 h-10 mx-auto text-primary mb-3" />
 
@@ -93,12 +84,9 @@ const MyOrders = () => {
           </button>
 
         </div>
-
       </div>
     );
   }
-
-
 
   if (loading) {
     return (
@@ -107,8 +95,6 @@ const MyOrders = () => {
       </div>
     );
   }
-
-
 
   return (
     <div className="min-h-screen bg-gradient-warm">
@@ -120,7 +106,7 @@ const MyOrders = () => {
         </h1>
 
         {orders.length === 0 && (
-          <div className="bg-card shadow-card rounded-xl p-6 text-center">
+          <div className="bg-card shadow-card border-2 border-gray-300 rounded-xl p-6 text-center">
             <p className="text-muted-foreground">
               మీరు ఇంకా ఏ order place చేయలేదు 😌
             </p>
@@ -133,7 +119,7 @@ const MyOrders = () => {
 
             <div
               key={order._id}
-              className="bg-card rounded-xl shadow-card p-6"
+              className="bg-card rounded-xl shadow-card border-2 border-gray-300 p-6 hover:border-orange-400 transition"
             >
 
               <div className="flex justify-between items-center mb-2">

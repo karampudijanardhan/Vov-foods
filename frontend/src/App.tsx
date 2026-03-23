@@ -8,7 +8,7 @@ import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
 import { WhatsAppButton } from "@/components/common/WhatsAppButton";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
@@ -42,7 +42,6 @@ import ProductsAdmin from "./admin/Products";
 import AddProduct from "./admin/AddProduct";
 
 const queryClient = new QueryClient();
-
 const API = "https://vov-foods-1.onrender.com/api";
 
 const AppLayout = () => {
@@ -50,11 +49,30 @@ const AppLayout = () => {
   const location = useLocation();
 
   const isAdminPage = location.pathname.startsWith("/admin");
+  const isHomePage = location.pathname === "/";
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+
+  }, []);
 
   // Visitor counter
   useEffect(() => {
     axios.get(`${API}/visitor/visit`).catch(()=>{});
   }, []);
+
+  /* Footer logic */
+  const showFooter = !isAdminPage && (!isMobile || (isMobile && isHomePage));
 
   return (
 
@@ -112,9 +130,10 @@ const AppLayout = () => {
 
       </main>
 
-      {/* Footer hidden on admin pages */}
-      {!isAdminPage && <Footer />}
+      {/* Footer condition */}
+      {showFooter && <Footer />}
 
+      {/* WhatsApp hidden on admin pages */}
       {!isAdminPage && <WhatsAppButton />}
 
     </div>

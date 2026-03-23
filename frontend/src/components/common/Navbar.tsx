@@ -63,9 +63,10 @@ export const Navbar = () => {
 
   const navigate = useNavigate();
 
+  /* LOGIN CHECK */
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(token ? true : false);
   }, []);
 
   const handleLogout = () => {
@@ -77,306 +78,314 @@ export const Navbar = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!searchQuery.trim()) return;
+
     navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     setSearchQuery("");
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+<header className="sticky top-0 z-50 w-full">
 
-      {/* TOP BAR */}
-      <div className="bg-primary text-primary-foreground text-sm py-2">
-        <div className="container flex justify-between items-center">
+{/* TOP BAR */}
+<div className="bg-primary text-primary-foreground text-sm py-2">
+<div className="container flex justify-between items-center">
 
-          <div className="flex items-center gap-4">
-            <a href="tel:+917731983479" className="flex items-center gap-1">
-              <Phone className="w-3 h-3" />
-              <span className="hidden sm:inline">+91 7731983479</span>
-            </a>
+<div className="flex items-center gap-4">
 
-            <Link to="/find-store" className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
-              <span className="hidden sm:inline">Find a Store</span>
-            </Link>
-          </div>
+<a href="tel:+917731983479" className="flex items-center gap-1">
+<Phone className="w-3 h-3" />
+<span className="hidden sm:inline">+91 7731983479</span>
+</a>
 
-          <Link to="/offers" className="flex items-center gap-1">
-            <Gift className="w-3 h-3" />
-            <span>Get 20% Off on First Order!</span>
-          </Link>
+<Link to="/find-store" className="flex items-center gap-1">
+<MapPin className="w-3 h-3" />
+<span className="hidden sm:inline">Find a Store</span>
+</Link>
 
-        </div>
-      </div>
+</div>
 
-      {/* NAVBAR */}
-      <nav className="bg-background border-b">
+<Link to="/offers" className="flex items-center gap-1">
+<Gift className="w-3 h-3" />
+<span>Get 20% Off on First Order!</span>
+</Link>
 
-        <div className="container py-4">
+</div>
+</div>
 
-          {/* LOGO + SEARCH + CART */}
-          <div className="flex items-center justify-between gap-4">
+{/* NAVBAR */}
+<nav className="bg-background border-b">
 
-            <Link to="/">
-              <img
-                src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
-                className="h-10"
-              />
-            </Link>
+<div className="container py-4">
 
-            {/* SEARCH */}
-            <form
-              onSubmit={handleSearch}
-              className="hidden md:flex flex-1 max-w-md"
-            >
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
+{/* LOGO + SEARCH + CART */}
+<div className="flex items-center justify-between gap-4">
 
-                <Input
-                  type="search"
-                  placeholder="Search pickles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </form>
+<Link to="/">
+<img
+src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
+className="h-10"
+/>
+</Link>
 
-            {/* RIGHT SIDE */}
-            <div className="flex items-center gap-2">
+{/* SEARCH DESKTOP */}
+<form
+onSubmit={handleSearch}
+className="hidden md:flex flex-1 max-w-md"
+>
+<div className="relative w-full">
 
-              {/* CART */}
-              <Link to="/cart">
-                <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="w-5 h-5" />
+<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
 
-                  {itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-xs flex items-center justify-center">
-                      {itemCount}
-                    </span>
-                  )}
-                </Button>
-              </Link>
+<Input
+type="search"
+placeholder="Search pickles..."
+value={searchQuery}
+onChange={(e) => setSearchQuery(e.target.value)}
+className="pl-10"
+/>
 
-              {/* DESKTOP LOGIN */}
-              <div className="hidden lg:flex gap-2">
+</div>
+</form>
 
-                {!isLoggedIn ? (
-                  <Link to="/login">
-                    <Button size="sm">Login</Button>
-                  </Link>
-                ) : (
-                  <>
-                    <Link to="/my-orders">
-                      <Button size="sm">My Orders</Button>
-                    </Link>
+{/* RIGHT SIDE */}
+<div className="flex items-center gap-2">
 
-                    <Button size="sm" onClick={handleLogout}>
-                      Logout
-                    </Button>
-                  </>
-                )}
+<Link to="/cart">
+<Button variant="ghost" size="icon" className="relative">
 
-              </div>
+<ShoppingCart className="w-6 h-6" />
 
-              {/* MOBILE MENU BUTTON */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X /> : <Menu />}
-              </Button>
+{itemCount > 0 && (
+<span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-xs flex items-center justify-center">
+{itemCount}
+</span>
+)}
 
-            </div>
-          </div>
+</Button>
+</Link>
 
-          {/* DESKTOP NAV */}
-          <div className="hidden lg:flex gap-6 mt-4 border-t pt-4">
+{/* DESKTOP LOGIN */}
+<div className="hidden lg:flex gap-2">
 
-            {navLinks.map((link) =>
-              link.submenu ? (
-                <div key={link.name} className="relative group">
+{!isLoggedIn ? (
+<Link to="/login">
+<Button size="sm">Login</Button>
+</Link>
+) : (
+<>
+<Link to="/my-orders">
+<Button size="sm">My Orders</Button>
+</Link>
 
-                  <span className="cursor-pointer">{link.name}</span>
+<Button size="sm" onClick={handleLogout}>
+Logout
+</Button>
+</>
+)}
 
-                  <div className="absolute hidden group-hover:block bg-white shadow rounded mt-2">
+</div>
 
-                    {link.submenu.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        className="block px-4 py-2 hover:bg-gray-100"
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
+{/* MOBILE MENU BUTTON */}
+<Button
+variant="ghost"
+size="icon"
+className="lg:hidden"
+onClick={() => setIsMenuOpen(!isMenuOpen)}
+>
+{isMenuOpen ? <X size={28}/> : <Menu size={28}/>}
+</Button>
 
-                  </div>
+</div>
 
-                </div>
-              ) : (
-                <Link key={link.path} to={link.path}>
-                  {link.name}
-                </Link>
-              )
-            )}
+</div>
 
-          </div>
+{/* DESKTOP NAV */}
+<div className="hidden lg:flex gap-6 mt-4 border-t pt-4">
 
-          {/* MOBILE MENU */}
-          <AnimatePresence>
+{navLinks.map((link) =>
+link.submenu ? (
 
-            {isMenuOpen && (
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: "auto" }}
-                exit={{ height: 0 }}
-                className="lg:hidden border-t mt-4 overflow-hidden"
-              >
+<div key={link.name} className="relative group">
 
-                <div className="flex flex-col">
+<span className="cursor-pointer">{link.name}</span>
 
-                  {navLinks.map((link) =>
-                    link.submenu ? (
-                      <div key={link.name} className="border-b">
+<div className="absolute hidden group-hover:block bg-white shadow rounded mt-2">
 
-                        <button
-                          className="px-4 py-3 text-left w-full"
-                          onClick={() =>
-                            setOpenMobileMenu(
-                              openMobileMenu === link.name
-                                ? null
-                                : link.name
-                            )
-                          }
-                        >
-                          {link.name}
-                        </button>
+{link.submenu.map((sub) => (
 
-                        {openMobileMenu === link.name && (
-                          <div className="pl-6">
+<Link
+key={sub.path}
+to={sub.path}
+className="block px-4 py-2 hover:bg-gray-100"
+>
+{sub.name}
+</Link>
 
-                            {link.submenu.map((sub) => (
-                              <Link
-                                key={sub.path}
-                                to={sub.path}
-                                className="block py-2"
-                                onClick={() => setIsMenuOpen(false)}
-                              >
-                                {sub.name}
-                              </Link>
-                            ))}
+))}
 
-                          </div>
-                        )}
+</div>
 
-                      </div>
-                    ) : (
-                      <Link
-                        key={link.path}
-                        to={link.path}
-                        className="px-4 py-3 border-b"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {link.name}
-                      </Link>
-                    )
-                  )}
+</div>
 
-                  {isLoggedIn && (
-                    <Link
-                      to="/my-orders"
-                      className="px-4 py-3 border-b"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      My Orders
-                    </Link>
-                  )}
+) : (
 
-                </div>
+<Link key={link.path} to={link.path}>
+{link.name}
+</Link>
 
-              </motion.div>
-            )}
+)
+)}
 
-          </AnimatePresence>
+</div>
 
-        </div>
-      </nav>
+{/* MOBILE MENU */}
+<AnimatePresence>
 
-      {/* AMAZON STYLE MOBILE BOTTOM BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+{isMenuOpen && (
 
-        {/* SEARCH BAR */}
-        <div className="px-3 pt-2 pb-1">
+<motion.div
+initial={{ height: 0 }}
+animate={{ height: "auto" }}
+exit={{ height: 0 }}
+className="lg:hidden border-t mt-4 overflow-hidden"
+>
 
-          <form onSubmit={handleSearch}>
+<div className="flex flex-col">
 
-            <div className="flex items-center bg-gray-100 rounded-full px-3 py-2">
+{navLinks.map((link) =>
+link.submenu ? (
 
-              <Search className="w-4 h-4 text-gray-500" />
+<div key={link.name} className="border-b">
 
-              <input
-                type="text"
-                placeholder="Search VOV Foods"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent outline-none px-2 text-sm w-full"
-              />
+<button
+className="px-4 py-3 text-left w-full"
+onClick={() =>
+setOpenMobileMenu(
+openMobileMenu === link.name ? null : link.name
+)
+}
+>
+{link.name}
+</button>
 
-            </div>
+{openMobileMenu === link.name && (
 
-          </form>
+<div className="pl-6">
 
-        </div>
+{link.submenu.map((sub) => (
 
-        {/* ICON NAVIGATION */}
-        <div className="flex justify-around items-center py-2 text-xs">
+<Link
+key={sub.path}
+to={sub.path}
+className="block py-2"
+onClick={() => setIsMenuOpen(false)}
+>
+{sub.name}
+</Link>
 
-          <Link to="/" className="flex flex-col items-center">
-            <Home size={20}/>
-            <span>Home</span>
-          </Link>
+))}
 
-          {isLoggedIn ? (
-            <Link to="/my-orders" className="flex flex-col items-center">
-              <Package size={20}/>
-              <span>Orders</span>
-            </Link>
-          ) : (
-            <Link to="/login" className="flex flex-col items-center">
-              <User size={20}/>
-              <span>Login</span>
-            </Link>
-          )}
+</div>
 
-          <Link to="/cart" className="flex flex-col items-center relative">
+)}
 
-            <ShoppingCart size={20}/>
+</div>
 
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1 rounded-full">
-                {itemCount}
-              </span>
-            )}
+) : (
 
-            <span>Cart</span>
+<Link
+key={link.path}
+to={link.path}
+className="px-4 py-3 border-b"
+onClick={() => setIsMenuOpen(false)}
+>
+{link.name}
+</Link>
 
-          </Link>
+)
+)}
 
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="flex flex-col items-center"
-          >
-            <Menu size={20}/>
-            <span>Menu</span>
-          </button>
+</div>
 
-        </div>
+</motion.div>
 
-      </div>
+)}
 
-    </header>
-  );
+</AnimatePresence>
+
+</div>
+</nav>
+
+{/* MOBILE AMAZON STYLE BAR */}
+<div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+
+{/* SEARCH */}
+<div className="px-3 pt-2 pb-1 mt-3">
+
+<form onSubmit={handleSearch}>
+
+<div className="flex items-center bg-gray-100 rounded-full px-3 py-2">
+
+<Search className="w-5 h-5 text-gray-500"/>
+
+<input
+type="text"
+placeholder="Search VOV Foods"
+value={searchQuery}
+onChange={(e)=>setSearchQuery(e.target.value)}
+className="bg-transparent outline-none px-2 text-sm w-full"
+/>
+
+</div>
+
+</form>
+
+</div>
+{/* ICON NAV */}
+<div className="flex justify-around items-center py- text-xs">
+
+<Link to="/" className="flex flex-col items-center">
+<Home size={22}/>
+<span>Home</span>
+</Link>
+
+{isLoggedIn ? (
+<Link to="/my-orders" className="flex flex-col items-center">
+<Package size={22}/>
+<span>Orders</span>
+</Link>
+) : (
+<Link to="/login" className="flex flex-col items-center">
+<User size={22}/>
+<span>Login</span>
+</Link>
+)}
+
+<Link to="/cart" className="flex flex-col items-center relative">
+
+<ShoppingCart size={22}/>
+
+{itemCount > 0 && (
+<span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1 rounded-full">
+{itemCount}
+</span>
+)}
+
+<span>Cart</span>
+
+</Link>
+
+<Link to="/login" className="flex flex-col items-center">
+<User size={22}/>
+<span>Login</span>
+</Link>
+
+</div>
+
+</div>
+
+</header>
+);
 };
