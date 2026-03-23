@@ -6,30 +6,30 @@ const API = "https://vov-foods-1.onrender.com/api/order";
 
 const Orders = () => {
 
-  const [orders,setOrders] = useState<any[]>([]);
-  const [loading,setLoading] = useState(true);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    const fetchOrders = async ()=>{
+    const fetchOrders = async () => {
 
-      try{
+      try {
 
         const res = await axios.get(API);
 
-        console.log("Orders API:",res.data);
+        console.log("Orders API:", res.data);
 
-        if(Array.isArray(res.data)){
+        if (Array.isArray(res.data)) {
           setOrders(res.data);
-        }else{
+        } else {
           setOrders([]);
         }
 
-      }catch(err){
+      } catch (err) {
 
-        console.error("Order loading error:",err);
+        console.error("Order loading error:", err);
 
-      }finally{
+      } finally {
 
         setLoading(false);
 
@@ -39,23 +39,23 @@ const Orders = () => {
 
     fetchOrders();
 
-  },[]);
+  }, []);
 
-  const updateStatus = async(id:string,status:string)=>{
+  const updateStatus = async (id: string, status: string) => {
 
-    try{
+    try {
 
-      await axios.put(`${API}/status/${id}`,{status});
+      await axios.put(`${API}/status/${id}`, { status });
 
       setOrders(prev =>
         prev.map(o =>
-          o._id === id ? {...o,status} : o
+          o._id === id ? { ...o, status } : o
         )
       );
 
-    }catch(err){
+    } catch (err) {
 
-      console.log("Status update error",err);
+      console.log("Status update error", err);
 
     }
 
@@ -83,15 +83,15 @@ const Orders = () => {
 
       <div className="space-y-6">
 
-        {orders.map(order=>{
+        {orders.map(order => {
 
           const item = order.items?.[0];
 
-          return(
+          return (
 
             <div
               key={order._id}
-              className="bg-card shadow-card rounded-xl p-4 sm:p-6"
+              className="bg-card shadow-card border-2 border-gray-300 hover:border-orange-400 transition rounded-xl p-4 sm:p-6"
             >
 
               {/* USER INFO */}
@@ -158,28 +158,28 @@ const Orders = () => {
               <div className="flex gap-2 flex-wrap">
 
                 <button
-                  onClick={()=>updateStatus(order._id,"PACKING")}
+                  onClick={() => updateStatus(order._id, "PACKING")}
                   className="px-3 py-1 rounded gradient-gold text-white text-sm"
                 >
                   Packing
                 </button>
 
                 <button
-                  onClick={()=>updateStatus(order._id,"SHIPPED")}
+                  onClick={() => updateStatus(order._id, "SHIPPED")}
                   className="px-3 py-1 rounded gradient-saffron text-white text-sm"
                 >
                   Shipped
                 </button>
 
                 <button
-                  onClick={()=>updateStatus(order._id,"OUT_FOR_DELIVERY")}
+                  onClick={() => updateStatus(order._id, "OUT_FOR_DELIVERY")}
                   className="px-3 py-1 rounded bg-secondary text-white text-sm"
                 >
                   Out for Delivery
                 </button>
 
                 <button
-                  onClick={()=>updateStatus(order._id,"DELIVERED")}
+                  onClick={() => updateStatus(order._id, "DELIVERED")}
                   className="px-3 py-1 rounded bg-accent text-white text-sm"
                 >
                   Delivered
@@ -189,7 +189,7 @@ const Orders = () => {
 
             </div>
 
-          )
+          );
 
         })}
 
