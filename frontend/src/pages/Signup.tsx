@@ -20,13 +20,17 @@ const Signup: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 🔒 Client-side password match check
+    // Password match check
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match ❌");
       return;
@@ -35,46 +39,54 @@ const Signup: React.FC = () => {
     setLoading(true);
 
     try {
-      // 👉 Send only username + password to backend
-      const res = await axios.post(
-  "https://vov-foods-1.onrender.com/api/auth/signup",
-  {
-    username: form.username,
-    password: form.password
-  },
-  {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }
-);
-
+      await axios.post(
+        "https://vov-foods-1.onrender.com/api/auth/signup",
+        {
+          username: form.username,
+          password: form.password
+        },
+        {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
 
       alert("Signup successful ✅. Please login.");
 
-      // redirect to login page
       navigate("/login");
+
     } catch (err: any) {
+
       console.error("Signup error:", err);
+
       alert(err.response?.data?.message || "Signup failed ❌");
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-warm px-4">
-      <div className="w-full max-w-md bg-card text-card-foreground rounded-xl shadow-card p-8">
+
+    <div className="min-h-screen flex items-center justify-center bg-gradient-warm px-4 overflow-x-hidden">
+
+      <div className="w-full max-w-md bg-card text-card-foreground rounded-xl shadow-card border-2 border-gray-300 hover:border-orange-400 transition p-8">
+
         <h2 className="text-2xl font-display text-center mb-6 text-spice-brown">
           Create Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {/* Username */}
           <div>
             <label className="block text-sm mb-1 text-muted-foreground">
               Username
             </label>
+
             <input
               type="text"
               name="username"
@@ -91,6 +103,7 @@ const Signup: React.FC = () => {
             <label className="block text-sm mb-1 text-muted-foreground">
               Password
             </label>
+
             <input
               type="password"
               name="password"
@@ -107,6 +120,7 @@ const Signup: React.FC = () => {
             <label className="block text-sm mb-1 text-muted-foreground">
               Confirm Password
             </label>
+
             <input
               type="password"
               name="confirmPassword"
@@ -118,7 +132,6 @@ const Signup: React.FC = () => {
             />
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             disabled={loading}
@@ -126,16 +139,23 @@ const Signup: React.FC = () => {
           >
             {loading ? "Creating..." : "Create Account"}
           </button>
+
         </form>
 
         <p className="text-sm text-center mt-5 text-muted-foreground">
           Already have an account?{" "}
-          <Link to="/login" className="text-primary font-medium hover:underline">
+          <Link
+            to="/login"
+            className="text-primary font-medium hover:underline"
+          >
             Login
           </Link>
         </p>
+
       </div>
+
     </div>
+
   );
 };
 

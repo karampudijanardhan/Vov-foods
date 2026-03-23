@@ -4,33 +4,33 @@ import AdminLayout from "./AdminLayout";
 
 const AddProduct = () => {
 
-  const [product,setProduct] = useState({
-    name:"",
-    category:"",
-    image:"",
-    price250:"",
-    price500:"",
-    price1kg:"",
-    spiceLevel:"",
-    shelfLife:"",
-    stock:"",
-    description:"",
-    ingredients:"",
+  const [product, setProduct] = useState({
+    name: "",
+    category: "",
+    image: "",
+    price250: "",
+    price500: "",
+    price1kg: "",
+    spiceLevel: "",
+    shelfLife: "",
+    stock: "",
+    description: "",
+    ingredients: "",
   });
 
-  const handleChange = (e:any)=>{
-    setProduct({...product,[e.target.name]:e.target.value});
+  const handleChange = (e: any) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e:any)=>{
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const newProduct = {
       name: product.name,
       category: product.category,
       image: product.image,
-      weightOptions:["250g","500g","1kg"],
-      prices:{
+      weightOptions: ["250g", "500g", "1kg"],
+      prices: {
         "250g": Number(product.price250),
         "500g": Number(product.price500),
         "1kg": Number(product.price1kg)
@@ -39,12 +39,12 @@ const AddProduct = () => {
       shelfLife: product.shelfLife,
       stock: Number(product.stock),
       rating: 4.5,
-      badges:["Homemade"],
+      badges: ["Homemade"],
       description: product.description,
       ingredients: product.ingredients.split(",")
     };
 
-    try{
+    try {
 
       const res = await axios.post(
         "http://localhost:5000/api/products/add",
@@ -55,11 +55,12 @@ const AddProduct = () => {
 
       console.log(res.data);
 
-    }catch(err){
+    } catch (err) {
+
       console.error(err);
       alert("Error adding product");
-    }
 
+    }
   };
 
   return (
@@ -72,28 +73,28 @@ const AddProduct = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-card shadow-card p-6 rounded-xl max-w-2xl space-y-4"
+        className="bg-card shadow-card border-2 border-gray-300 hover:border-orange-400 transition p-6 rounded-xl max-w-2xl space-y-4"
       >
 
         <input
           name="name"
           placeholder="Product Name"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2 bg-background"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <input
           name="category"
           placeholder="Category (pickles / sweets)"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2 bg-background"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <input
           name="image"
           placeholder="Image URL"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2 bg-background"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <div className="grid grid-cols-3 gap-3">
@@ -102,21 +103,21 @@ const AddProduct = () => {
             name="price250"
             placeholder="250g Price"
             onChange={handleChange}
-            className="border border-input rounded-lg p-2"
+            className="border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           />
 
           <input
             name="price500"
             placeholder="500g Price"
             onChange={handleChange}
-            className="border border-input rounded-lg p-2"
+            className="border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           />
 
           <input
             name="price1kg"
             placeholder="1kg Price"
             onChange={handleChange}
-            className="border border-input rounded-lg p-2"
+            className="border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
           />
 
         </div>
@@ -125,39 +126,39 @@ const AddProduct = () => {
           name="spiceLevel"
           placeholder="Spice Level (mild / medium / hot)"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <input
           name="shelfLife"
           placeholder="Shelf Life (ex: 10 months)"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <input
           name="stock"
           placeholder="Stock"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <textarea
           name="description"
           placeholder="Product Description"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <input
           name="ingredients"
           placeholder="Ingredients (comma separated)"
           onChange={handleChange}
-          className="w-full border border-input rounded-lg p-2"
+          className="w-full border border-input rounded-lg p-2 bg-background focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         <button
-          className="w-full py-2 rounded-lg gradient-saffron text-white"
+          className="w-full py-2 rounded-lg gradient-saffron text-white font-medium shadow-warm hover:shadow-hover transition"
         >
           Add Product
         </button>
@@ -167,6 +168,7 @@ const AddProduct = () => {
     </AdminLayout>
 
   );
+
 };
 
 export default AddProduct;

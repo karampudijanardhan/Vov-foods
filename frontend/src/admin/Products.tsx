@@ -4,17 +4,15 @@ import AdminLayout from "./AdminLayout";
 
 const Products = () => {
 
-  const [products,setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     fetchProducts();
+  }, []);
 
-  },[]);
+  const fetchProducts = async () => {
 
-  const fetchProducts = async ()=>{
-
-    try{
+    try {
 
       const res = await axios.get(
         "http://localhost:5000/api/products"
@@ -22,17 +20,17 @@ const Products = () => {
 
       setProducts(res.data);
 
-    }catch(err){
+    } catch (err) {
 
-      console.error("Error loading products",err);
+      console.error("Error loading products", err);
 
     }
 
   };
 
-  const deleteProduct = async(id:string)=>{
+  const deleteProduct = async (id: string) => {
 
-    try{
+    try {
 
       await axios.delete(
         `http://localhost:5000/api/products/${id}`
@@ -40,9 +38,9 @@ const Products = () => {
 
       setProducts(products.filter(p => p._id !== id));
 
-    }catch(err){
+    } catch (err) {
 
-      console.error("Delete error",err);
+      console.error("Delete error", err);
 
     }
 
@@ -79,11 +77,11 @@ const Products = () => {
       {/* ================= MOBILE VIEW ================= */}
       <div className="grid gap-4 md:hidden">
 
-        {products.map((product:any)=>(
+        {products.map((product: any) => (
 
           <div
             key={product._id}
-            className="bg-card shadow-card rounded-xl p-4 flex items-center gap-4"
+            className="bg-card shadow-card border-2 border-gray-300 hover:border-orange-400 transition rounded-xl p-4 flex items-center gap-4"
           >
 
             <img
@@ -109,7 +107,7 @@ const Products = () => {
             </div>
 
             <button
-              onClick={()=>deleteProduct(product._id)}
+              onClick={() => deleteProduct(product._id)}
               className="px-3 py-1 rounded bg-destructive text-white text-sm"
             >
               Delete
@@ -122,7 +120,7 @@ const Products = () => {
       </div>
 
       {/* ================= DESKTOP TABLE ================= */}
-      <div className="hidden md:block bg-card shadow-card rounded-xl overflow-x-auto">
+      <div className="hidden md:block bg-card shadow-card border-2 border-gray-300 rounded-xl overflow-x-auto">
 
         <table className="w-full">
 
@@ -142,9 +140,9 @@ const Products = () => {
 
           <tbody>
 
-            {products.map((product:any)=>(
+            {products.map((product: any) => (
 
-              <tr key={product._id} className="border-t border-border">
+              <tr key={product._id} className="border-t border-border hover:bg-muted/40">
 
                 <td className="p-3">
 
@@ -165,7 +163,7 @@ const Products = () => {
                 <td className="p-3">
 
                   <button
-                    onClick={()=>deleteProduct(product._id)}
+                    onClick={() => deleteProduct(product._id)}
                     className="px-3 py-1 rounded bg-destructive text-white"
                   >
                     Delete

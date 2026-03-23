@@ -10,6 +10,7 @@ import {
   Phone,
   Gift,
   Home,
+  LogOut,
   User,
   Package
 } from "lucide-react";
@@ -167,13 +168,16 @@ className="pl-10"
 </Link>
 
 {/* DESKTOP LOGIN */}
-<div className="hidden lg:flex gap-2">
+<div className="hidden lg:flex gap-2 items-center">
 
 {!isLoggedIn ? (
+
 <Link to="/login">
 <Button size="sm">Login</Button>
 </Link>
+
 ) : (
+
 <>
 <Link to="/my-orders">
 <Button size="sm">My Orders</Button>
@@ -183,11 +187,11 @@ className="pl-10"
 Logout
 </Button>
 </>
+
 )}
 
-</div>
-
-{/* MOBILE MENU BUTTON */}
+              </div>
+              {/* MOBILE MENU BUTTON */}
 <Button
 variant="ghost"
 size="icon"
@@ -377,11 +381,17 @@ className="bg-transparent outline-none px-2 text-sm w-full"
 
 </Link>
 
-<Link to="/login" className="flex flex-col items-center">
-<User size={22}/>
-<span>Login</span>
-</Link>
-
+{isLoggedIn ? (
+  <button onClick={handleLogout} className="flex flex-col items-center">
+    <LogOut size={22} />
+    <span>Logout</span>
+  </button>
+) : (
+  <Link to="/login" className="flex flex-col items-center">
+    <User size={22} />
+    <span>Login</span>
+  </Link>
+)}
 </div>
 
 </div>
