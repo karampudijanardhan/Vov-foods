@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
-import axios from "axios";
 
 const DELIVERY_CHARGE = 50;
 const FREE_DELIVERY_MIN = 599;
@@ -15,7 +14,7 @@ const FREE_DELIVERY_MIN = 599;
 const Checkout = () => {
 
   const navigate = useNavigate();
-  const { state, clearCart } = useCart();
+  const { state } = useCart();
   const { items, subtotal } = state;
 
   const [formData, setFormData] = useState({
@@ -29,7 +28,7 @@ const Checkout = () => {
   const deliveryCharge = subtotal >= FREE_DELIVERY_MIN ? 0 : DELIVERY_CHARGE;
   const total = subtotal + deliveryCharge;
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = (e: any) => {
 
     e.preventDefault();
 
@@ -44,60 +43,14 @@ const Checkout = () => {
 
     }
 
-    try {
-
-      const orderId = `VOV${Date.now().toString().slice(-8)}`;
-
-      const orderData = {
-
-        orderRef: orderId,
-
-        name: formData.name,
-
-        phone: formData.phone,
-
-        address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
-
-        items: items.map((item) => ({
-
-          productId: item.product._id || item.product.id,
-
-          name: item.product.name,
-
-          image: item.product.image,
-
-          qty: item.quantity,
-
-          weight: item.selectedWeight,
-
-          price: item.price
-
-        })),
-
-        totalAmount: total,
-
-        username: username
-
-      };
-
-      await axios.post(
-  "https://vov-foods-1.onrender.com/api/order",
-  orderData
-);
-
-      clearCart();
-
-      navigate("/order-success", {
-        state: { orderId, total, items: items.length }
-      });
-
-    } catch (error) {
-
-      console.error("Order failed:", error);
-
-      alert("Order place avvaledu. Please try again.");
-
-    }
+    navigate("/payment", {
+      state: {
+        formData,
+        items,
+        subtotal,
+        total
+      }
+    });
 
   };
 
@@ -113,7 +66,6 @@ const Checkout = () => {
   if (items.length === 0) {
 
     navigate("/cart");
-
     return null;
 
   }
@@ -252,7 +204,7 @@ const Checkout = () => {
                   size="lg"
                   className="w-full gradient-saffron hover:opacity-90"
                 >
-                  Place Order • ₹{total}
+                  Continue to Payment • ₹{total}
                 </Button>
 
               </form>
@@ -317,7 +269,7 @@ const Checkout = () => {
 
                     <span className="text-muted-foreground">Delivery</span>
 
-                    <span className={deliveryCharge === 0 ? "text-cardamom" : ""}>
+                    <span className={deliveryCharge === 0 ? "text-green-600" : ""}>
                       {deliveryCharge === 0 ? "FREE" : `₹${deliveryCharge}`}
                     </span>
 

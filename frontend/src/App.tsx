@@ -16,6 +16,7 @@ import Category from "./pages/Category";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import SearchPage from "./pages/Search";
 import FindStore from "./pages/FindStore";
@@ -29,6 +30,10 @@ import TrackSearch from "./pages/TrackSearch";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MyOrders from "./pages/MyOrders";
+import PrivacyPolicy from "./pages/privacy-policy";
+import RefundPolicy from "./pages/refund-policy";
+import ShippingPolicy from "./pages/shipping-policy";
+import Terms from "./pages/terms";
 
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -74,6 +79,11 @@ const AppLayout = () => {
           <Route path="/offers" element={<Offers />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/terms" element={<Terms />} />
 
           {/* Auth */}
           <Route path="/login" element={<Login />} />
