@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   createOrder,
   getOrders,
@@ -9,19 +10,19 @@ import {
 
 const router = express.Router();
 
-// Create order
+// CREATE ORDER
 router.post("/", createOrder);
 
-// Get all orders
+// GET ALL ORDERS
 router.get("/", getOrders);
 
-// Get user orders
+// USER ORDERS
 router.get("/my/:username", getMyOrders);
 
-// Track order
+// TRACK ORDER
 router.get("/track/:orderId", trackOrder);
 
-// Update order status
+// UPDATE STATUS
 router.put("/status/:id", updateOrderStatus);
 
 export default router;

@@ -12,56 +12,53 @@ const sendOrderSMS = async (order) => {
 
   try {
 
-    const phone = order.phone || order.mobile;
+    const phone = order.phone;
 
     if (!phone) {
-      console.log("❌ No phone number in order");
+      console.log("❌ No phone number");
       return;
     }
 
-    const customerPhone = `+91${phone}`;
-    const adminPhone = `+91${process.env.ADMIN_PHONE}`;
-
-    console.log("📩 Sending SMS to:", customerPhone);
+    const customerPhone = `whatsapp:+91${phone}`;
+    const adminPhone = `whatsapp:+${process.env.ADMIN_PHONE}`;
 
     const customerMessage =
-`VOV Foods Order Confirmed
+`🛒 VOV Foods Order Confirmed
 
 Order ID: ${order.orderRef}
-Amount: ₹${order.totalAmount}
+Total: ₹${order.totalAmount}
 
-Thank you for ordering!`;
+Thank you for ordering from VOV Foods ❤️`;
 
     const adminMessage =
-`New Order - VOV Foods
-ID: ${order.orderRef}
+`🔥 New Order - VOV Foods
+
+Order ID: ${order.orderRef}
+
 Customer: ${order.name}
 Phone: ${phone}
+
 Total: ₹${order.totalAmount}`;
 
-    // Send SMS to customer
-    const customerSMS = await client.messages.create({
+    // SEND TO CUSTOMER
+    await client.messages.create({
       body: customerMessage,
-      from: process.env.TWILIO_PHONE_NUMBER,
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
       to: customerPhone
     });
 
-    console.log("Customer SMS SID:", customerSMS.sid);
-
-    // Send SMS to admin
-    const adminSMS = await client.messages.create({
+    // SEND TO ADMIN
+    await client.messages.create({
       body: adminMessage,
-      from: process.env.TWILIO_PHONE_NUMBER,
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
       to: adminPhone
     });
 
-    console.log("Admin SMS SID:", adminSMS.sid);
-
-    console.log("✅ SMS process completed");
+    console.log("✅ WhatsApp messages sent");
 
   } catch (error) {
 
-    console.log("❌ Twilio SMS error:", error);
+    console.log("❌ Twilio error:", error);
 
   }
 

@@ -8,9 +8,14 @@ const orderSchema = new mongoose.Schema({
 
   name: String,
 
-  phone: String,   // ⭐ THIS IS MISSING
+  phone: {
+    type: String,
+    required: true
+  },
 
   address: String,
+
+  paymentMethod: String,
 
   items: [
     {

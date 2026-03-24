@@ -1,8 +1,10 @@
 import Order from "../models/Order.js";
 import sendOrderSMS from "../services/sendOrderSMS.js";
 
+
 // CREATE ORDER
 export const createOrder = async (req, res) => {
+
   try {
 
     console.log("Incoming order:", req.body);
@@ -12,7 +14,7 @@ export const createOrder = async (req, res) => {
 
     console.log("Order saved:", saved.orderRef);
 
-    // SEND SMS
+    // SEND WHATSAPP
     await sendOrderSMS(saved);
 
     res.status(201).json({
@@ -30,11 +32,13 @@ export const createOrder = async (req, res) => {
     });
 
   }
+
 };
 
 
 // GET ALL ORDERS
 export const getOrders = async (req, res) => {
+
   try {
 
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -43,12 +47,18 @@ export const getOrders = async (req, res) => {
 
   } catch (err) {
 
-    res.status(500).json({ message: "Failed to fetch orders" });
+    res.status(500).json({
+      message: "Failed to fetch orders"
+    });
 
   }
+
 };
+
+
 // TRACK ORDER
 export const trackOrder = async (req, res) => {
+
   try {
 
     const { orderId } = req.params;
@@ -56,7 +66,9 @@ export const trackOrder = async (req, res) => {
     const order = await Order.findById(orderId);
 
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+      return res.status(404).json({
+        message: "Order not found"
+      });
     }
 
     res.json({
@@ -70,28 +82,36 @@ export const trackOrder = async (req, res) => {
     });
 
   }
+
 };
+
 
 // GET USER ORDERS
 export const getMyOrders = async (req, res) => {
+
   try {
 
     const { username } = req.params;
 
-    const orders = await Order.find({ username }).sort({ createdAt: -1 });
+    const orders = await Order.find({ username })
+      .sort({ createdAt: -1 });
 
     res.json(orders);
 
   } catch (err) {
 
-    res.status(500).json({ message: "Failed to fetch user orders" });
+    res.status(500).json({
+      message: "Failed to fetch user orders"
+    });
 
   }
+
 };
 
 
 // UPDATE ORDER STATUS
 export const updateOrderStatus = async (req, res) => {
+
   try {
 
     const { id } = req.params;
@@ -111,7 +131,10 @@ export const updateOrderStatus = async (req, res) => {
 
   } catch (err) {
 
-    res.status(500).json({ message: "Status update failed" });
+    res.status(500).json({
+      message: "Status update failed"
+    });
 
   }
+
 };
