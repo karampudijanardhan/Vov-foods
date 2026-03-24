@@ -9,14 +9,20 @@ const Payment = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { formData, items, total } = location.state;
+  const { formData, items, total } = location.state || {};
 
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const placeOrder = async () => {
 
     if (!paymentMethod) {
       alert("Please select payment method");
+      return;
+    }
+
+    if (!formData || !items) {
+      alert("Order data missing");
       return;
     }
 
@@ -27,6 +33,8 @@ const Payment = () => {
     const orderData = {
 
       orderRef: orderId,
+
+      username: username,
 
       name: formData.name,
 
@@ -45,26 +53,34 @@ const Payment = () => {
         price: item.price
       })),
 
-      totalAmount: total,
-
-      username: username
-
+      totalAmount: total
     };
 
     try {
 
-      await axios.post(
+      setLoading(true);
+
+      const res = await axios.post(
         "https://vov-foods-1.onrender.com/api/order",
         orderData
       );
 
-      navigate("/order-success", {
-        state: { orderId }
-      });
+      if (res.data.success) {
+
+        navigate("/order-success", {
+          state: { orderId }
+        });
+
+      }
 
     } catch (error) {
 
+      console.error("Order error:", error);
       alert("Order failed");
+
+    } finally {
+
+      setLoading(false);
 
     }
 
@@ -91,81 +107,26 @@ const Payment = () => {
 
             <div className="lg:col-span-2 space-y-4">
 
-              <div className="bg-white p-6 rounded-xl shadow">
+              {["COD","UPI","Debit Card","Credit Card"].map((method)=>(
+                
+                <div key={method} className="bg-white p-6 rounded-xl shadow">
 
-                <label className="flex items-center gap-4 cursor-pointer">
+                  <label className="flex items-center gap-4 cursor-pointer">
 
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="COD"
-                    onChange={(e)=>setPaymentMethod(e.target.value)}
-                  />
+                    <input
+                      type="radio"
+                      name="payment"
+                      value={method}
+                      onChange={(e)=>setPaymentMethod(e.target.value)}
+                    />
 
-                  <span className="font-medium">
-                    Cash on Delivery
-                  </span>
+                    <span className="font-medium">{method}</span>
 
-                </label>
+                  </label>
 
-              </div>
+                </div>
 
-              <div className="bg-white p-6 rounded-xl shadow">
-
-                <label className="flex items-center gap-4 cursor-pointer">
-
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="UPI"
-                    onChange={(e)=>setPaymentMethod(e.target.value)}
-                  />
-
-                  <span className="font-medium">
-                    UPI Payment (PhonePe / Google Pay / Paytm)
-                  </span>
-
-                </label>
-
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow">
-
-                <label className="flex items-center gap-4 cursor-pointer">
-
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Debit Card"
-                    onChange={(e)=>setPaymentMethod(e.target.value)}
-                  />
-
-                  <span className="font-medium">
-                    Debit Card
-                  </span>
-
-                </label>
-
-              </div>
-
-              <div className="bg-white p-6 rounded-xl shadow">
-
-                <label className="flex items-center gap-4 cursor-pointer">
-
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="Credit Card"
-                    onChange={(e)=>setPaymentMethod(e.target.value)}
-                  />
-
-                  <span className="font-medium">
-                    Credit Card
-                  </span>
-
-                </label>
-
-              </div>
+              ))}
 
             </div>
 
@@ -181,7 +142,7 @@ const Payment = () => {
 
                 <div className="space-y-3 max-h-64 overflow-auto">
 
-                  {items.map((item:any)=>(
+                  {items?.map((item:any)=>(
                     
                     <div
                       key={item.product.id}
@@ -230,8 +191,9 @@ const Payment = () => {
                 <Button
                   className="w-full mt-4"
                   onClick={placeOrder}
+                  disabled={loading}
                 >
-                  Confirm Order
+                  {loading ? "Placing Order..." : "Confirm Order"}
                 </Button>
 
               </div>

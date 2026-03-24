@@ -81,7 +81,8 @@ const AppLayout = () => {
       {/* Navbar hidden on admin pages */}
       {!isAdminPage && <Navbar />}
 
-      <main className="flex-1">
+      {/* MAIN CONTENT */}
+      <main className="flex-1 pb-[150px] lg:pb-0">
 
         <Routes>
 

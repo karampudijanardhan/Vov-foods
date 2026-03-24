@@ -22,7 +22,6 @@ import { useCart } from "@/context/CartContext";
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Products", path: "/products" },
-
   {
     name: "Pickles",
     submenu: [
@@ -30,7 +29,6 @@ const navLinks = [
       { name: "Non Veg Pickles", path: "/category/nonveg-pickles" }
     ]
   },
-
   {
     name: "Powders",
     submenu: [
@@ -38,7 +36,6 @@ const navLinks = [
       { name: "Karam Podi", path: "/category/karampodi" }
     ]
   },
-
   {
     name: "Sweets",
     submenu: [
@@ -47,7 +44,6 @@ const navLinks = [
       { name: "Hot Snacks", path: "/category/hot-snacks" }
     ]
   },
-
   { name: "Special Items", path: "/category/special-items" },
   { name: "Offers", path: "/offers" }
 ];
@@ -66,8 +62,17 @@ export const Navbar = () => {
 
   /* LOGIN CHECK */
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(token ? true : false);
+    const checkLogin = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    };
+
+    checkLogin();
+    window.addEventListener("focus", checkLogin);
+
+    return () => {
+      window.removeEventListener("focus", checkLogin);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -79,9 +84,7 @@ export const Navbar = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!searchQuery.trim()) return;
-
     navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     setSearchQuery("");
   };
@@ -136,7 +139,6 @@ onSubmit={handleSearch}
 className="hidden md:flex flex-1 max-w-md"
 >
 <div className="relative w-full">
-
 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
 
 <Input
@@ -146,7 +148,6 @@ value={searchQuery}
 onChange={(e) => setSearchQuery(e.target.value)}
 className="pl-10"
 />
-
 </div>
 </form>
 
@@ -155,7 +156,6 @@ className="pl-10"
 
 <Link to="/cart">
 <Button variant="ghost" size="icon" className="relative">
-
 <ShoppingCart className="w-6 h-6" />
 
 {itemCount > 0 && (
@@ -163,7 +163,6 @@ className="pl-10"
 {itemCount}
 </span>
 )}
-
 </Button>
 </Link>
 
@@ -171,13 +170,10 @@ className="pl-10"
 <div className="hidden lg:flex gap-2 items-center">
 
 {!isLoggedIn ? (
-
 <Link to="/login">
 <Button size="sm">Login</Button>
 </Link>
-
 ) : (
-
 <>
 <Link to="/my-orders">
 <Button size="sm">My Orders</Button>
@@ -187,11 +183,11 @@ className="pl-10"
 Logout
 </Button>
 </>
-
 )}
 
-              </div>
-              {/* MOBILE MENU BUTTON */}
+</div>
+
+{/* MOBILE MENU BUTTON */}
 <Button
 variant="ghost"
 size="icon"
@@ -202,23 +198,33 @@ onClick={() => setIsMenuOpen(!isMenuOpen)}
 </Button>
 
 </div>
+</div>
 
+{/* MOBILE SEARCH */}
+<div className="md:hidden px-3 pb-3">
+<form onSubmit={handleSearch}>
+<div className="flex items-center bg-gray-100 rounded-full px-3 py-2">
+<Search className="w-5 h-5 text-gray-500"/>
+<input
+type="text"
+placeholder="Search VOV Foods"
+value={searchQuery}
+onChange={(e)=>setSearchQuery(e.target.value)}
+className="bg-transparent outline-none px-2 text-sm w-full"
+/>
+</div>
+</form>
 </div>
 
 {/* DESKTOP NAV */}
 <div className="hidden lg:flex gap-6 mt-4 border-t pt-4">
-
 {navLinks.map((link) =>
 link.submenu ? (
-
 <div key={link.name} className="relative group">
-
 <span className="cursor-pointer">{link.name}</span>
 
 <div className="absolute hidden group-hover:block bg-white shadow rounded mt-2">
-
 {link.submenu.map((sub) => (
-
 <Link
 key={sub.path}
 to={sub.path}
@@ -226,36 +232,26 @@ className="block px-4 py-2 hover:bg-gray-100"
 >
 {sub.name}
 </Link>
-
 ))}
-
 </div>
-
 </div>
-
 ) : (
-
 <Link key={link.path} to={link.path}>
 {link.name}
 </Link>
-
 )
 )}
-
 </div>
 
 {/* MOBILE MENU */}
 <AnimatePresence>
-
 {isMenuOpen && (
-
 <motion.div
 initial={{ height: 0 }}
 animate={{ height: "auto" }}
 exit={{ height: 0 }}
-className="lg:hidden border-t mt-4 overflow-hidden"
+className="lg:hidden border-t overflow-hidden"
 >
-
 <div className="flex flex-col">
 
 {navLinks.map((link) =>
@@ -312,43 +308,17 @@ onClick={() => setIsMenuOpen(false)}
 )}
 
 </div>
-
 </motion.div>
-
 )}
-
 </AnimatePresence>
 
 </div>
 </nav>
 
-{/* MOBILE AMAZON STYLE BAR */}
+{/* MOBILE BOTTOM BAR */}
 <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
 
-{/* SEARCH */}
-<div className="px-3 pt-2 pb-1 mt-3">
-
-<form onSubmit={handleSearch}>
-
-<div className="flex items-center bg-gray-100 rounded-full px-3 py-2">
-
-<Search className="w-5 h-5 text-gray-500"/>
-
-<input
-type="text"
-placeholder="Search VOV Foods"
-value={searchQuery}
-onChange={(e)=>setSearchQuery(e.target.value)}
-className="bg-transparent outline-none px-2 text-sm w-full"
-/>
-
-</div>
-
-</form>
-
-</div>
-{/* ICON NAV */}
-<div className="flex justify-around items-center py- text-xs">
+<div className="flex justify-around items-center py-3 text-xs">
 
 <Link to="/" className="flex flex-col items-center">
 <Home size={22}/>
@@ -368,34 +338,31 @@ className="bg-transparent outline-none px-2 text-sm w-full"
 )}
 
 <Link to="/cart" className="flex flex-col items-center relative">
-
 <ShoppingCart size={22}/>
-
 {itemCount > 0 && (
 <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1 rounded-full">
 {itemCount}
 </span>
 )}
-
 <span>Cart</span>
-
 </Link>
 
 {isLoggedIn ? (
-  <button onClick={handleLogout} className="flex flex-col items-center">
-    <LogOut size={22} />
-    <span>Logout</span>
-  </button>
+<button onClick={handleLogout} className="flex flex-col items-center">
+<LogOut size={22}/>
+<span>Logout</span>
+</button>
 ) : (
-  <Link to="/login" className="flex flex-col items-center">
-    <User size={22} />
-    <span>Login</span>
-  </Link>
+<Link to="/login" className="flex flex-col items-center">
+<User size={22}/>
+<span>Login</span>
+</Link>
 )}
+
 </div>
 
 </div>
 
 </header>
-);
+  );
 };
