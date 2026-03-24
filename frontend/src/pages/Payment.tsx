@@ -11,15 +11,10 @@ const Payment = () => {
 
   const { formData, items, total } = location.state || {};
 
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [loading, setLoading] = useState(false);
 
   const placeOrder = async () => {
-
-    if (!paymentMethod) {
-      alert("Please select payment method");
-      return;
-    }
 
     if (!formData || !items) {
       alert("Order data missing");
@@ -54,6 +49,7 @@ const Payment = () => {
       })),
 
       totalAmount: total
+
     };
 
     try {
@@ -68,7 +64,12 @@ const Payment = () => {
       if (res.data.success) {
 
         navigate("/order-success", {
-          state: { orderId }
+          state: {
+            orderId,
+            total,
+            items,
+            createdAt: new Date().toISOString()
+          }
         });
 
       }
@@ -103,30 +104,32 @@ const Payment = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
 
-            {/* PAYMENT METHODS */}
+            {/* PAYMENT METHOD */}
 
             <div className="lg:col-span-2 space-y-4">
 
-              {["COD","UPI","Debit Card","Credit Card"].map((method)=>(
-                
-                <div key={method} className="bg-white p-6 rounded-xl shadow">
+              <div className="bg-white p-6 rounded-xl shadow">
 
-                  <label className="flex items-center gap-4 cursor-pointer">
+                <label className="flex items-center gap-4 cursor-pointer">
 
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={method}
-                      onChange={(e)=>setPaymentMethod(e.target.value)}
-                    />
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="Cash on Delivery"
+                    checked={paymentMethod === "Cash on Delivery"}
+                    onChange={(e)=>setPaymentMethod(e.target.value)}
+                  />
 
-                    <span className="font-medium">{method}</span>
+                  <div>
+                    <p className="font-medium">Cash on Delivery</p>
+                    <p className="text-sm text-gray-500">
+                      Pay when your order is delivered to your doorstep.
+                    </p>
+                  </div>
 
-                  </label>
+                </label>
 
-                </div>
-
-              ))}
+              </div>
 
             </div>
 
@@ -143,7 +146,7 @@ const Payment = () => {
                 <div className="space-y-3 max-h-64 overflow-auto">
 
                   {items?.map((item:any)=>(
-                    
+
                     <div
                       key={item.product.id}
                       className="flex gap-3"
@@ -181,7 +184,6 @@ const Payment = () => {
                   <div className="flex justify-between text-lg font-bold">
 
                     <span>Total</span>
-
                     <span>₹{total}</span>
 
                   </div>
