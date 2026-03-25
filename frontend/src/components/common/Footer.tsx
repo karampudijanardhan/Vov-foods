@@ -146,7 +146,7 @@ export const Footer = () => {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-cream/10">
+      <div className="border-t border-cream/10 flex-1 pb-[60px] lg:pb-0">
         <div className="container py-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm opacity-70">
 
           <p>© 2025 VOV FOODS. All rights reserved.</p>
@@ -169,9 +169,7 @@ export const Footer = () => {
               Terms & Conditions
             </Link>
 
-            <Link to="/contact" className="hover:opacity-100">
-              Contact Us
-            </Link>
+            
 
           </div>
         </div>

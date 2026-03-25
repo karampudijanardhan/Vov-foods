@@ -11,28 +11,57 @@ const AdminLogin: React.FC = () => {
     email: ""
   });
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // simple admin check
-    if (form.email === "janardhankarampudi@gmail.com") {
+    setLoading(true);
 
-      localStorage.setItem("admin", "true");
+    try {
+
+      const res = await fetch(
+        "https://vov-foods-1.onrender.com/api/auth/admin-login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(form)
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Admin login failed");
+      }
+
+      // save admin token
+      localStorage.setItem("adminToken", data.token);
 
       alert("Admin login successful ✅");
 
       navigate("/admin-dashboard");
 
-    } else {
+    } catch (error: any) {
 
-      alert("Invalid admin email ❌");
+      alert(error.message || "Invalid admin email ❌");
+
+    } finally {
+
+      setLoading(false);
 
     }
   };
@@ -68,9 +97,10 @@ const AdminLogin: React.FC = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full py-2 rounded-lg gradient-saffron text-primary-foreground font-medium shadow-warm hover:shadow-hover transition"
+            disabled={loading}
+            className="w-full py-2 rounded-lg gradient-saffron text-primary-foreground font-medium shadow-warm hover:shadow-hover transition disabled:opacity-60"
           >
-            Login as Admin
+            {loading ? "Logging in..." : "Login as Admin"}
           </button>
 
         </form>

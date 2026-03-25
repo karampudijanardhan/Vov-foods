@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Menu,
   X,
+  ShoppingBag,
   MapPin,
   Phone,
   Gift,
@@ -215,32 +216,31 @@ className="bg-transparent outline-none px-2 text-sm w-full"
 </div>
 </form>
 </div>
-
 {/* DESKTOP NAV */}
 <div className="hidden lg:flex gap-6 mt-4 border-t pt-4">
-{navLinks.map((link) =>
-link.submenu ? (
-<div key={link.name} className="relative group">
-<span className="cursor-pointer">{link.name}</span>
+  {navLinks.map((link) =>
+    link.submenu ? (
+      <div key={link.name} className="relative group">
+        <span className="cursor-pointer">{link.name}</span>
 
-<div className="absolute hidden group-hover:block bg-white shadow rounded mt-2">
-{link.submenu.map((sub) => (
-<Link
-key={sub.path}
-to={sub.path}
-className="block px-4 py-2 hover:bg-gray-100"
->
-{sub.name}
-</Link>
-))}
-</div>
-</div>
-) : (
-<Link key={link.path} to={link.path}>
-{link.name}
-</Link>
-)
-)}
+        <div className="absolute top-full left-0 hidden group-hover:block bg-white shadow rounded">
+          {link.submenu.map((sub) => (
+            <Link
+              key={sub.path}
+              to={sub.path}
+              className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
+            >
+              {sub.name}
+            </Link>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <Link key={link.path} to={link.path}>
+        {link.name}
+      </Link>
+    )
+  )}
 </div>
 
 {/* MOBILE MENU */}
@@ -316,7 +316,7 @@ onClick={() => setIsMenuOpen(false)}
 </nav>
 
 {/* MOBILE BOTTOM BAR */}
-<div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+<div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50  ">
 
 <div className="flex justify-around items-center py-3 text-xs">
 
@@ -326,15 +326,15 @@ onClick={() => setIsMenuOpen(false)}
 </Link>
 
 {isLoggedIn ? (
-<Link to="/my-orders" className="flex flex-col items-center">
-<Package size={22}/>
-<span>Orders</span>
-</Link>
+  <Link to="/my-orders" className="flex flex-col items-center">
+    <Package size={22} />
+    <span>Orders</span>
+  </Link>
 ) : (
-<Link to="/login" className="flex flex-col items-center">
-<User size={22}/>
-<span>Login</span>
-</Link>
+  <Link to="/products" className="flex flex-col items-center">
+    <ShoppingBag size={22} />
+    <span>Products</span>
+  </Link>
 )}
 
 <Link to="/cart" className="flex flex-col items-center relative">

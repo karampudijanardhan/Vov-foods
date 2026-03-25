@@ -94,8 +94,19 @@ const Login: React.FC = () => {
               className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring"
               required
             />
+
+            {/* Forgot Password */}
+            <div className="text-right mt-1">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-primary hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}

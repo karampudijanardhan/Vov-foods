@@ -29,6 +29,7 @@ import NotFound from "./pages/NotFound";
 import TrackSearch from "./pages/TrackSearch";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 import MyOrders from "./pages/MyOrders";
 import PrivacyPolicy from "./pages/privacy-policy";
 import RefundPolicy from "./pages/refund-policy";
@@ -82,7 +83,7 @@ const AppLayout = () => {
       {!isAdminPage && <Navbar />}
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 pb-[150px] lg:pb-0">
+      <main className="flex-1 pb-[200px] lg:pb-0">
 
         <Routes>
 
@@ -107,6 +108,7 @@ const AppLayout = () => {
           {/* Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Orders */}
           <Route path="/checkout" element={<Checkout />} />

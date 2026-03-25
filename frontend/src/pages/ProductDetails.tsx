@@ -8,7 +8,7 @@ import { mockProducts } from "@/data/mockProducts";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { ProductGrid } from "@/components/product/ProductGrid";
-
+import ReviewSection from "@/components/product/ReviewSection";
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const product = mockProducts.find((p) => p.id === id);
@@ -229,7 +229,7 @@ const ProductDetails = () => {
           </motion.div>
         </div>
       </section>
-
+<ReviewSection productId={product.id} />
       {/* Related Products */}
       {relatedProducts.length > 0 && (
         <section className="py-16 gradient-warm">
