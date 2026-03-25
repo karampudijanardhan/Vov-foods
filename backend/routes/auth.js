@@ -73,5 +73,33 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login failed" });
   }
 });
+// 🔑 RESET PASSWORD
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { username, newPassword } = req.body;
 
+    if (!username || !newPassword) {
+      return res.status(400).json({ message: "Username and new password required" });
+    }
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+
+  } catch (err) {
+    console.error("Reset password error:", err);
+    res.status(500).json({ message: "Password reset failed" });
+  }
+});
 export default router;
