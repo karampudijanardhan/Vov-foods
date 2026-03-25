@@ -102,4 +102,31 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Password reset failed" });
   }
 });
+// 🔐 ADMIN LOGIN
+router.post("/admin-login", async (req, res) => {
+  try {
+
+    const { email } = req.body;
+
+    const adminEmail = "vovfoods@gmail.com";
+
+    if (email !== adminEmail) {
+      return res.status(401).json({ message: "Not authorized as admin" });
+    }
+
+    const token = jwt.sign(
+      { role: "admin", email },
+      process.env.JWT_SECRET || "secret123",
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      token,
+      admin: true
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Admin login failed" });
+  }
+});
 export default router;
