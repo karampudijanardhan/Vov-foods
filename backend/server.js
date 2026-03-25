@@ -9,6 +9,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/productRoutes.js";
 import visitorRoutes from "./routes/visitor.js";
+import reviewRoutes from "./routes/reviews.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/api/order", orderRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/visitor", visitorRoutes);
+app.use("/api/reviews", reviewRoutes);
 // TEST ROUTE
 app.get("/api/test", (req, res) => {
   res.json({ message: "API working" });
