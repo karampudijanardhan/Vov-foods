@@ -202,7 +202,7 @@ const Payment = () => {
                     </h3>
 
                     <img
-                      src="/public/qr.jpeg"
+                      src="/qr.jpeg"
                       alt="UPI QR"
                       className="w-56 mx-auto"
                     />
