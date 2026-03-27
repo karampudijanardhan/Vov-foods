@@ -35,6 +35,7 @@ import PrivacyPolicy from "./pages/privacy-policy";
 import RefundPolicy from "./pages/refund-policy";
 import ShippingPolicy from "./pages/shipping-policy";
 import Terms from "./pages/terms";
+import ScrollToTop from "./components/ScrollToTop";
 
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -77,14 +78,15 @@ const AppLayout = () => {
 
   return (
 
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen ">
 
       {/* Navbar hidden on admin pages */}
       {!isAdminPage && <Navbar />}
 
       {/* MAIN CONTENT */}
       <main className="flex-1 pb-[200px] lg:pb-0">
-
+{/* This controls page scroll */}
+      <ScrollToTop />
         <Routes>
 
           {/* Public pages */}

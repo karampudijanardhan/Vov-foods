@@ -12,7 +12,26 @@ const Payment = () => {
   const { formData, items, total } = location.state || {};
 
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [utr, setUtr] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const username = localStorage.getItem("username");
+
+  const orderId = `VOV${Date.now().toString().slice(-8)}`;
+
+  /* UPI REDIRECT FUNCTION */
+
+  const openUPIApp = () => {
+
+    const upiId = "9121971848@ybl";
+    const name = "Karampudi Janardhan";
+
+    const upiLink =
+      `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR`;
+
+    window.location.href = upiLink;
+
+  };
 
   const placeOrder = async () => {
 
@@ -21,9 +40,10 @@ const Payment = () => {
       return;
     }
 
-    const username = localStorage.getItem("username");
-
-    const orderId = `VOV${Date.now().toString().slice(-8)}`;
+    if (paymentMethod === "UPI" && !utr) {
+      alert("Please enter UTR number");
+      return;
+    }
 
     const orderData = {
 
@@ -38,6 +58,13 @@ const Payment = () => {
       address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
 
       paymentMethod: paymentMethod,
+
+      utr: paymentMethod === "UPI" ? utr : null,
+
+      paymentStatus:
+        paymentMethod === "UPI"
+          ? "Pending Verification"
+          : "Pending",
 
       items: items.map((item: any) => ({
         productId: item.product._id || item.product.id,
@@ -104,9 +131,11 @@ const Payment = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
 
-            {/* PAYMENT METHOD */}
+            {/* PAYMENT OPTIONS */}
 
             <div className="lg:col-span-2 space-y-4">
+
+              {/* COD */}
 
               <div className="bg-white p-6 rounded-xl shadow">
 
@@ -114,24 +143,114 @@ const Payment = () => {
 
                   <input
                     type="radio"
-                    name="payment"
                     value="Cash on Delivery"
                     checked={paymentMethod === "Cash on Delivery"}
                     onChange={(e)=>setPaymentMethod(e.target.value)}
                   />
 
                   <div>
-                    <p className="font-medium">Cash on Delivery</p>
-                    <p className="text-sm text-gray-500">
-                      Pay when your order is delivered to your doorstep.
+
+                    <p className="font-medium">
+                      Cash on Delivery
                     </p>
+
+                    <p className="text-sm text-gray-500">
+                      Pay when order arrives
+                    </p>
+
                   </div>
 
                 </label>
 
               </div>
 
+
+              {/* UPI PAYMENT */}
+
+              <div className="bg-white p-6 rounded-xl shadow space-y-4">
+
+                <label className="flex items-center gap-4 cursor-pointer">
+
+                  <input
+                    type="radio"
+                    value="UPI"
+                    checked={paymentMethod === "UPI"}
+                    onChange={(e)=>setPaymentMethod(e.target.value)}
+                  />
+
+                  <div>
+
+                    <p className="font-medium">
+                      UPI Payment
+                    </p>
+
+                    <p className="text-sm text-gray-500">
+                      PhonePe / Google Pay / Paytm
+                    </p>
+
+                  </div>
+
+                </label>
+
+
+                {paymentMethod === "UPI" && (
+
+                  <div className="space-y-4">
+
+                    <h3 className="text-lg font-semibold text-center">
+                      Scan & Pay
+                    </h3>
+
+                    <img
+                      src="/public/qr.jpeg"
+                      alt="UPI QR"
+                      className="w-56 mx-auto"
+                    />
+
+                    <p className="text-center text-gray-500 text-sm">
+                      Scan QR using PhonePe or GPay
+                    </p>
+
+
+                    {/* UPI REDIRECT BUTTONS */}
+
+                    <div className="flex gap-4 justify-center">
+
+<a
+href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+className="bg-purple-600 text-white px-4 py-2 rounded"
+>
+PhonePe
+</a>
+
+<a
+href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+className="bg-green-600 text-white px-4 py-2 rounded"
+>
+Google Pay
+</a>
+
+</div>
+
+
+                    {/* UTR INPUT */}
+
+                    <input
+                      type="text"
+                      placeholder="Enter UTR Number"
+                      value={utr}
+                      onChange={(e)=>setUtr(e.target.value)}
+                      className="w-full border rounded-lg p-2"
+                    />
+
+                  </div>
+
+                )}
+
+              </div>
+
             </div>
+
 
             {/* ORDER SUMMARY */}
 
@@ -195,7 +314,11 @@ const Payment = () => {
                   onClick={placeOrder}
                   disabled={loading}
                 >
-                  {loading ? "Placing Order..." : "Confirm Order"}
+
+                  {loading
+                    ? "Placing Order..."
+                    : "Confirm Order"}
+
                 </Button>
 
               </div>

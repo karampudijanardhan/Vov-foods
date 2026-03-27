@@ -17,6 +17,13 @@ const Checkout = () => {
   const { state } = useCart();
   const { items, subtotal } = state;
 
+  // saved addresses
+  const [savedAddresses, setSavedAddresses] = useState<any[]>(
+    JSON.parse(localStorage.getItem("addresses") || "[]")
+  );
+
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState<number | null>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -36,11 +43,37 @@ const Checkout = () => {
     const username = localStorage.getItem("username");
 
     if (!token || !username) {
-
       alert("దయచేసి ముందుగా Login చేయండి 🙏");
       navigate("/login");
       return;
+    }
 
+    // phone validation
+    if (!/^[0-9]{10}$/.test(formData.phone)) {
+      alert("Please enter a valid 10-digit mobile number");
+      return;
+    }
+
+    // check fields
+    if (!formData.name || !formData.address || !formData.city || !formData.pincode) {
+      alert("Please fill all delivery details");
+      return;
+    }
+
+    // save address (prevent duplicates)
+    let addresses = JSON.parse(localStorage.getItem("addresses") || "[]");
+
+    const exists = addresses.find(
+      (a: any) =>
+        a.phone === formData.phone &&
+        a.address === formData.address &&
+        a.pincode === formData.pincode
+    );
+
+    if (!exists) {
+      addresses.push(formData);
+      localStorage.setItem("addresses", JSON.stringify(addresses));
+      setSavedAddresses(addresses);
     }
 
     navigate("/payment", {
@@ -56,18 +89,29 @@ const Checkout = () => {
 
   const handleChange = (e: any) => {
 
+    const { name, value } = e.target;
+
+    if (name === "phone") {
+      const cleaned = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, phone: cleaned });
+      return;
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
 
   };
 
-  if (items.length === 0) {
+  const selectAddress = (index: number) => {
+    setSelectedAddressIndex(index);
+    setFormData(savedAddresses[index]);
+  };
 
+  if (items.length === 0) {
     navigate("/cart");
     return null;
-
   }
 
   return (
@@ -87,9 +131,50 @@ const Checkout = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
 
-            {/* FORM */}
-
             <div className="lg:col-span-2">
+
+              {/* Saved addresses */}
+
+              {savedAddresses.length > 0 && (
+                <div className="bg-card rounded-xl p-6 shadow-card mb-6">
+                  <h3 className="font-semibold mb-4">Saved Addresses</h3>
+
+                  <div className="space-y-3">
+
+                    {savedAddresses.map((addr, index) => (
+                      <div
+                        key={index}
+                        className="border p-3 rounded-lg cursor-pointer hover:bg-muted"
+                        onClick={() => selectAddress(index)}
+                      >
+                        <p className="font-medium">{addr.name}</p>
+                        <p className="text-sm">{addr.phone}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {addr.address}, {addr.city} - {addr.pincode}
+                        </p>
+                      </div>
+                    ))}
+
+                  </div>
+                </div>
+              )}
+
+              <Button
+                type="button"
+                variant="outline"
+                className="mb-4"
+                onClick={() =>
+                  setFormData({
+                    name: "",
+                    phone: "",
+                    address: "",
+                    city: "",
+                    pincode: "",
+                  })
+                }
+              >
+                Add New Address
+              </Button>
 
               <form
                 onSubmit={handleSubmit}
@@ -141,6 +226,7 @@ const Checkout = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         className="pl-10"
+                        maxLength={10}
                         required
                       />
 

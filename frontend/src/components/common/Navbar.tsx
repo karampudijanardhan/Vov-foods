@@ -63,18 +63,25 @@ export const Navbar = () => {
 
   /* LOGIN CHECK */
   useEffect(() => {
-    const checkLogin = () => {
-      const token = localStorage.getItem("token");
-      setIsLoggedIn(!!token);
-    };
+  const checkLogin = () => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  };
 
-    checkLogin();
-    window.addEventListener("focus", checkLogin);
+  // run immediately
+  checkLogin();
 
-    return () => {
-      window.removeEventListener("focus", checkLogin);
-    };
-  }, []);
+  // when tab/app becomes active
+  window.addEventListener("focus", checkLogin);
+
+  // when localStorage changes
+  window.addEventListener("storage", checkLogin);
+
+  return () => {
+    window.removeEventListener("focus", checkLogin);
+    window.removeEventListener("storage", checkLogin);
+  };
+}, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
