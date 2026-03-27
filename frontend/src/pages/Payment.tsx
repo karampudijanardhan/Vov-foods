@@ -223,7 +223,7 @@ const Payment = () => {
                     <div className="flex items-center justify-between bg-gray-50 p-3 rounded">
 
                       <span className="text-sm">
-                        9121971848@ybl
+                        7731983479@ybl
                       </span>
 
                       <button
