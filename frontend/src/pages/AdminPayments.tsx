@@ -11,7 +11,7 @@ const AdminPayments = () => {
     try{
 
       const res = await axios.get(
-        "https://vov-foods-1.onrender.com/api/orders"
+        "https://vov-foods-1.onrender.com/api/order"
       );
 
       setOrders(res.data);
