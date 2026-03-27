@@ -24,7 +24,7 @@ export const mockProducts: Product[] = [
   category: "pickles",
   image: "/IMG_3204.PNG",
   weightOptions: ["250g","500g","1kg"],
-  prices: { "250g":107,"500g":214,"1kg":429 },
+  prices: { "250g":2,"500g":214,"1kg":429 },
   spiceLevel: "hot",
   shelfLife: "09 months",
   stock: 60,

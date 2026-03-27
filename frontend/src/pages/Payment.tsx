@@ -19,18 +19,9 @@ const Payment = () => {
 
   const orderId = `VOV${Date.now().toString().slice(-8)}`;
 
-  /* UPI REDIRECT FUNCTION */
-
-  const openUPIApp = () => {
-
-    const upiId = "9121971848@ybl";
-    const name = "Karampudi Janardhan";
-
-    const upiLink =
-      `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR`;
-
-    window.location.href = upiLink;
-
+  const copyUPI = () => {
+    navigator.clipboard.writeText("9121971848@ybl");
+    alert("UPI ID copied");
   };
 
   const placeOrder = async () => {
@@ -48,11 +39,8 @@ const Payment = () => {
     const orderData = {
 
       orderRef: orderId,
-
       username: username,
-
       name: formData.name,
-
       phone: formData.phone,
 
       address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
@@ -66,7 +54,7 @@ const Payment = () => {
           ? "Pending Verification"
           : "Pending",
 
-      items: items.map((item: any) => ({
+      items: items.map((item:any)=>({
         productId: item.product._id || item.product.id,
         name: item.product.name,
         image: item.product.image,
@@ -116,20 +104,17 @@ const Payment = () => {
 
   return (
 
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100 py-6">
 
-      <div className="container mx-auto py-10">
+      <div className="max-w-6xl mx-auto px-4">
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <motion.div initial={{opacity:0}} animate={{opacity:1}}>
 
-          <h1 className="text-3xl font-bold mb-8">
+          <h1 className="text-2xl lg:text-3xl font-bold mb-6 text-center lg:text-left">
             Select Payment Method
           </h1>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6">
 
             {/* PAYMENT OPTIONS */}
 
@@ -137,9 +122,9 @@ const Payment = () => {
 
               {/* COD */}
 
-              <div className="bg-white p-6 rounded-xl shadow">
+              <div className="bg-white p-5 rounded-xl shadow">
 
-                <label className="flex items-center gap-4 cursor-pointer">
+                <label className="flex items-center gap-3 cursor-pointer">
 
                   <input
                     type="radio"
@@ -150,12 +135,12 @@ const Payment = () => {
 
                   <div>
 
-                    <p className="font-medium">
+                    <p className="font-semibold">
                       Cash on Delivery
                     </p>
 
                     <p className="text-sm text-gray-500">
-                      Pay when order arrives
+                      Pay when your order arrives
                     </p>
 
                   </div>
@@ -167,9 +152,9 @@ const Payment = () => {
 
               {/* UPI PAYMENT */}
 
-              <div className="bg-white p-6 rounded-xl shadow space-y-4">
+              <div className="bg-white p-5 rounded-xl shadow space-y-4">
 
-                <label className="flex items-center gap-4 cursor-pointer">
+                <label className="flex items-center gap-3 cursor-pointer">
 
                   <input
                     type="radio"
@@ -180,7 +165,7 @@ const Payment = () => {
 
                   <div>
 
-                    <p className="font-medium">
+                    <p className="font-semibold">
                       UPI Payment
                     </p>
 
@@ -195,52 +180,87 @@ const Payment = () => {
 
                 {paymentMethod === "UPI" && (
 
-                  <div className="space-y-4">
+                  <div className="space-y-5">
 
-                    <h3 className="text-lg font-semibold text-center">
-                      Scan & Pay
-                    </h3>
+                    {/* AMOUNT */}
 
-                    <img
-                      src="/qr.jpeg"
-                      alt="UPI QR"
-                      className="w-56 mx-auto"
-                    />
+                    <div className="text-center bg-green-50 p-3 rounded-lg">
 
-                    <p className="text-center text-gray-500 text-sm">
-                      Scan QR using PhonePe or GPay
+                      <p className="text-sm text-gray-600">
+                        Pay Amount
+                      </p>
+
+                      <p className="text-2xl font-bold text-green-600">
+                        ₹{total}
+                      </p>
+
+                    </div>
+
+
+                    {/* QR */}
+
+                    <div className="flex justify-center">
+
+                      <img
+                        src="/qr.jpeg"
+                        alt="UPI QR"
+                        className="w-52 rounded-lg border"
+                      />
+
+                    </div>
+
+                    <p className="text-center text-sm text-gray-500">
+                      Scan QR using PhonePe / Google Pay
                     </p>
 
 
-                    {/* UPI REDIRECT BUTTONS */}
+                    {/* UPI ID */}
 
-                    <div className="flex gap-4 justify-center">
+                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded">
 
-<a
-href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
-className="bg-purple-600 text-white px-4 py-2 rounded"
->
-PhonePe
-</a>
+                      <span className="text-sm">
+                        9121971848@ybl
+                      </span>
 
-<a
-href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
-className="bg-green-600 text-white px-4 py-2 rounded"
->
-Google Pay
-</a>
+                      <button
+                        onClick={copyUPI}
+                        className="text-xs bg-black text-white px-3 py-1 rounded"
+                      >
+                        Copy
+                      </button>
 
-</div>
+                    </div>
+
+
+                    {/* UPI BUTTONS */}
+
+                    <div className="grid grid-cols-2 gap-3">
+
+                      <a
+                        href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+                        className="bg-purple-600 text-white text-center py-2 rounded-lg font-medium"
+                      >
+                        PhonePe
+                      </a>
+
+                      <a
+                        href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+                        className="bg-green-600 text-white text-center py-2 rounded-lg font-medium"
+                      >
+                        Google Pay
+                      </a>
+
+                    </div>
 
 
                     {/* UTR INPUT */}
 
                     <input
                       type="text"
-                      placeholder="Enter UTR Number"
+                      placeholder="Enter UTR Number after payment"
                       value={utr}
                       onChange={(e)=>setUtr(e.target.value)}
-                      className="w-full border rounded-lg p-2"
+                      className="w-full border rounded-lg p-3"
                     />
 
                   </div>
@@ -256,7 +276,7 @@ Google Pay
 
             <div>
 
-              <div className="bg-white rounded-xl p-6 shadow space-y-4">
+              <div className="bg-white rounded-xl p-5 shadow space-y-4">
 
                 <h3 className="text-lg font-semibold">
                   Order Summary
@@ -266,10 +286,7 @@ Google Pay
 
                   {items?.map((item:any)=>(
 
-                    <div
-                      key={item.product.id}
-                      className="flex gap-3"
-                    >
+                    <div key={item.product.id} className="flex gap-3">
 
                       <img
                         src={item.product.image}
@@ -298,7 +315,7 @@ Google Pay
 
                 </div>
 
-                <div className="border-t pt-4">
+                <div className="border-t pt-3">
 
                   <div className="flex justify-between text-lg font-bold">
 
@@ -310,14 +327,12 @@ Google Pay
                 </div>
 
                 <Button
-                  className="w-full mt-4"
+                  className="w-full mt-3"
                   onClick={placeOrder}
                   disabled={loading}
                 >
 
-                  {loading
-                    ? "Placing Order..."
-                    : "Confirm Order"}
+                  {loading ? "Placing Order..." : "Confirm Order"}
 
                 </Button>
 

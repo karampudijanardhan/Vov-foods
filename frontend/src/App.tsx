@@ -36,6 +36,7 @@ import RefundPolicy from "./pages/refund-policy";
 import ShippingPolicy from "./pages/shipping-policy";
 import Terms from "./pages/terms";
 import ScrollToTop from "./components/ScrollToTop";
+import AdminPayments from "./pages/AdminPayments";
 
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -106,6 +107,7 @@ const AppLayout = () => {
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping-policy" element={<ShippingPolicy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/admin-payments" element={<AdminPayments />} />
 
           {/* Auth */}
           <Route path="/login" element={<Login />} />
