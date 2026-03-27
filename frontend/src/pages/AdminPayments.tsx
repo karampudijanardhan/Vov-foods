@@ -35,7 +35,7 @@ const AdminPayments = () => {
     try {
 
       await axios.put(
-        `https://vov-foods-1.onrender.com/api/orders/verify/${id}`
+        `https://vov-foods-1.onrender.com/api/order/verify/${id}`
       );
 
       // refresh orders
@@ -54,7 +54,7 @@ const AdminPayments = () => {
 
   return (
 
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100 mt-12">
 
       {/* Sidebar */}
       <AdminSidebar/>

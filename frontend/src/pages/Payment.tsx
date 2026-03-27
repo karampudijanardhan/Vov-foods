@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { QRCodeCanvas } from "qrcode.react"; // NEW
 
 const Payment = () => {
 
@@ -19,8 +20,12 @@ const Payment = () => {
 
   const orderId = `VOV${Date.now().toString().slice(-8)}`;
 
+  // NEW (Dynamic UPI Link for QR)
+  const upiLink =
+    `upi://pay?pa=7731983479@ybl&pn=Karampudi%20baskar&am=${total}&cu=INR&tn=VOVFoodsOrder`;
+
   const copyUPI = () => {
-    navigator.clipboard.writeText("9121971848@ybl");
+    navigator.clipboard.writeText("7731983479@ybl");
     alert("UPI ID copied");
   };
 
@@ -197,14 +202,13 @@ const Payment = () => {
                     </div>
 
 
-                    {/* QR */}
+                    {/* DYNAMIC QR */}
 
                     <div className="flex justify-center">
 
-                      <img
-                        src="/qr.jpeg"
-                        alt="UPI QR"
-                        className="w-52 rounded-lg border"
+                      <QRCodeCanvas
+                        value={upiLink}
+                        size={200}
                       />
 
                     </div>
@@ -237,14 +241,14 @@ const Payment = () => {
                     <div className="grid grid-cols-2 gap-3">
 
                       <a
-                        href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+                        href={upiLink}
                         className="bg-purple-600 text-white text-center py-2 rounded-lg font-medium"
                       >
                         PhonePe
                       </a>
 
                       <a
-                        href={`upi://pay?pa=9121971848@ybl&pn=Karampudi%20Janardhan&am=${total}&cu=INR`}
+                        href={upiLink}
                         className="bg-green-600 text-white text-center py-2 rounded-lg font-medium"
                       >
                         Google Pay
