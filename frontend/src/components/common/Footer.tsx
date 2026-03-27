@@ -79,32 +79,40 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Customer Service */}
-          <div className="hidden lg:block">
-            <h4 className="font-display font-semibold text-lg mb-4">
-              Customer Service
-            </h4>
+         {/* Customer Service */}
+<div className="lg:block hidden">
+  <h4 className="font-display font-semibold text-lg mb-4">
+    Customer Service
+  </h4>
 
-            <ul className="space-y-3">
-              {[
-                { name: "Track Order", path: "/track-order" },
-                { name: "Find a Store", path: "/find-store" },
-                { name: "Support", path: "/support" },
-                { name: "About Us", path: "/about" },
+  <ul className="space-y-3">
+    {[
+      { name: "Track Order", path: "/track-order" },
+      { name: "Find a Store", path: "/find-store" },
+      { name: "About Us", path: "/about" },
                 { name: "Contact", path: "/contact" },
-              ].map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+    ].map((link) => (
+      <li key={link.path}>
+        <Link
+          to={link.path}
+          className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors"
+        >
+          {link.name}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</div>
 
+{/* Support always visible */}
+<div className="mt-4 lg:mt-0">
+  <Link
+    to="/support"
+    className="text-sm opacity-80 hover:opacity-100 hover:text-primary transition-colors"
+  >
+    Support
+  </Link>
+</div>
           {/* Contact */}
           <div>
             <h4 className="font-display font-semibold text-lg mb-4">
