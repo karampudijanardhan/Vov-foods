@@ -5,7 +5,8 @@ import {
   getOrders,
   getMyOrders,
   updateOrderStatus,
-  trackOrder
+  trackOrder,
+  verifyPayment
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.get("/track/:orderId", trackOrder);
 
 // UPDATE STATUS
 router.put("/status/:id", updateOrderStatus);
+
+// NEW ROUTE (PAYMENT VERIFY)
+router.put("/verify/:id", verifyPayment);
 
 export default router;

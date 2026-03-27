@@ -17,6 +17,15 @@ const orderSchema = new mongoose.Schema({
 
   paymentMethod: String,
 
+  // NEW FIELD (UTR NUMBER)
+  utr: String,
+
+  // NEW FIELD (PAYMENT STATUS)
+  paymentStatus: {
+    type: String,
+    default: "Pending Verification"
+  },
+
   items: [
     {
       productId: String,

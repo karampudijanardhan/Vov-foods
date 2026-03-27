@@ -34,6 +34,37 @@ export const createOrder = async (req, res) => {
   }
 
 };
+// VERIFY PAYMENT (ADMIN)
+export const verifyPayment = async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const updated = await Order.findByIdAndUpdate(
+      id,
+      {
+        paymentStatus: "Verified",
+        status: "CONFIRMED"
+      },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      message: "Payment verified",
+      order: updated
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      message: "Payment verification failed"
+    });
+
+  }
+
+};
 
 
 // GET ALL ORDERS
