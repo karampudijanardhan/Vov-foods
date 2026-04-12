@@ -12,7 +12,7 @@ export const Footer = () => {
             <div className="flex items-center gap-2">
               <div className="rounded-full flex items-center justify-center">
                 <img
-                  src="/WhatsApp Image 2026-03-21 at 21.28.48.jpeg"
+                  src="/WhatsApp Image 2026-04-12 at 08.11.41.jpeg"
                   alt="VOV Foods Logo"
                   className="h-32 w-auto object-contain"
                 />

@@ -136,7 +136,7 @@ export const Navbar = () => {
 
 <Link to="/">
 <img
-src="/WhatsApp Image 2026-03-21 at 21.28.48.jpeg"
+src="/WhatsApp Image 2026-04-12 at 08.11.41.jpeg"
 className="h-10"
 />
 </Link>
