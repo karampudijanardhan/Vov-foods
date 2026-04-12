@@ -12,7 +12,7 @@ export const Footer = () => {
             <div className="flex items-center gap-2">
               <div className="rounded-full flex items-center justify-center">
                 <img
-                  src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
+                  src="/WhatsApp Image 2026-03-21 at 21.28.48.jpeg"
                   alt="VOV Foods Logo"
                   className="h-32 w-auto object-contain"
                 />

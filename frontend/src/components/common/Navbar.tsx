@@ -136,7 +136,7 @@ export const Navbar = () => {
 
 <Link to="/">
 <img
-src="https://vovfoods.com/wp-content/uploads/2022/05/vovfoods-logo.png"
+src="/WhatsApp Image 2026-03-21 at 21.28.48.jpeg"
 className="h-10"
 />
 </Link>
