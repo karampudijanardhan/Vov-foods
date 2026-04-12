@@ -16,24 +16,28 @@ const client = twilio(
 const sendOrderSMS = async (order) => {
   try {
 
-    console.log("🚀 sendOrderSMS function triggered");
+    console.log("🚀 SMS function started");
 
     if (!order || !order.phone) {
-      console.log("❌ No phone number found in order");
+      console.log("❌ No phone number in order");
       return;
     }
 
-    // CLEAN PHONE NUMBER (ONLY LAST 10 DIGITS)
+    // CLEAN PHONE NUMBER
     const cleanPhone = order.phone.replace(/\D/g, "").slice(-10);
 
+    // CREATE CUSTOMER PHONE
     const customerPhone = `+91${cleanPhone}`;
+
+    console.log("📩 Sending SMS from:", process.env.TWILIO_PHONE_NUMBER);
+    console.log("📩 Sending SMS to:", customerPhone);
 
     // ADMIN NUMBERS FROM ENV
     const adminNumbers = process.env.ADMIN_PHONE
       .split(",")
       .map(num => `+${num.replace(/\D/g, "")}`);
 
-    // ITEM LIST
+    // CREATE ITEM LIST
     const itemList = order.items
       .map(item => `${item.name} ${item.weight} × ${item.qty}`)
       .join("\n");
@@ -64,9 +68,7 @@ ${itemList}
 
 Total: ₹${order.totalAmount}`;
 
-    console.log("📩 Sending SMS to customer:", customerPhone);
-
-    // SEND TO CUSTOMER
+    // SEND SMS TO CUSTOMER
     const customerMSG = await client.messages.create({
       body: customerMessage,
       from: process.env.TWILIO_PHONE_NUMBER,
@@ -75,7 +77,7 @@ Total: ₹${order.totalAmount}`;
 
     console.log("✅ Customer SMS SID:", customerMSG.sid);
 
-    // SEND TO ADMINS
+    // SEND SMS TO ADMINS
     for (const adminPhone of adminNumbers) {
 
       console.log("📩 Sending SMS to admin:", adminPhone);
