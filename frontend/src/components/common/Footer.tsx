@@ -12,9 +12,9 @@ export const Footer = () => {
             <div className="flex items-center gap-2">
               <div className="rounded-full flex items-center justify-center">
                 <img
-                  src="/WhatsApp Image 2026-04-12 at 08.11.41.jpeg"
+                  src="/8fd9c27a-3f21-4dfc-8e38-6dd8a6d4f4a6.png"
                   alt="VOV Foods Logo"
-                  className="h-32 w-auto object-contain"
+                  className="h-32  w-auto object-contain"
                 />
               </div>
               <div>
