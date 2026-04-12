@@ -3,7 +3,7 @@ import twilio from "twilio";
 
 dotenv.config();
 
-// CHECK REQUIRED ENV VARIABLES
+// CHECK ENV VARIABLES
 if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
   console.error("❌ Twilio credentials missing in .env");
 }
@@ -16,39 +16,40 @@ const client = twilio(
 const sendOrderSMS = async (order) => {
   try {
 
+    console.log("🚀 sendOrderSMS function triggered");
+
     if (!order || !order.phone) {
-      console.log("❌ No phone number in order");
+      console.log("❌ No phone number found in order");
       return;
     }
 
-    // CLEAN PHONE NUMBER
-    const cleanPhone = order.phone.replace(/\D/g, "");
+    // CLEAN PHONE NUMBER (ONLY LAST 10 DIGITS)
+    const cleanPhone = order.phone.replace(/\D/g, "").slice(-10);
 
     const customerPhone = `+91${cleanPhone}`;
 
-    // MULTIPLE ADMINS (comma separated in .env)
-    const adminNumbers = process.env.ADMIN_PHONE.split(",").map(num => `+${num}`);
+    // ADMIN NUMBERS FROM ENV
+    const adminNumbers = process.env.ADMIN_PHONE
+      .split(",")
+      .map(num => `+${num.replace(/\D/g, "")}`);
 
-    // CREATE ITEM LIST
+    // ITEM LIST
     const itemList = order.items
       .map(item => `${item.name} ${item.weight} × ${item.qty}`)
       .join("\n");
 
     // CUSTOMER MESSAGE
-    const customerMessage = `
-VOV Foods Order Confirmed
+    const customerMessage = `VOV Foods Order Confirmed
 
 Order ID: ${order.orderRef}
 
 Total Amount: ₹${order.totalAmount}
 
 Thank you for ordering from VOV Foods ❤️
-Your order will be delivered soon.
-`;
+Your order will be delivered soon.`;
 
     // ADMIN MESSAGE
-    const adminMessage = `
-🔥 New Order - VOV Foods
+    const adminMessage = `🔥 New Order - VOV Foods
 
 Order ID: ${order.orderRef}
 
@@ -61,8 +62,7 @@ ${order.address}
 Items:
 ${itemList}
 
-Total: ₹${order.totalAmount}
-`;
+Total: ₹${order.totalAmount}`;
 
     console.log("📩 Sending SMS to customer:", customerPhone);
 
@@ -75,7 +75,7 @@ Total: ₹${order.totalAmount}
 
     console.log("✅ Customer SMS SID:", customerMSG.sid);
 
-    // SEND TO ALL ADMINS
+    // SEND TO ADMINS
     for (const adminPhone of adminNumbers) {
 
       console.log("📩 Sending SMS to admin:", adminPhone);
