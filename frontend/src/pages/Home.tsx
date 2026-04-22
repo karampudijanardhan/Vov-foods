@@ -133,7 +133,11 @@ const Home = () => {
         </div>
       </section>
 
-
+<div className="bg-yellow-400 text-black font-semibold py-2 overflow-hidden">
+  <div className="animate-marquee whitespace-nowrap">
+    🥭 Summer Special Offer! Fresh Mango Pickles Available Now – Order Today 🔥
+  </div>
+</div>
       {/* Categories */}
       <section className="py-16 bg-background">
         <div className="container">
