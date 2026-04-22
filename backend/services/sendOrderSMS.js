@@ -1,21 +1,10 @@
+import axios from "axios";
 import dotenv from "dotenv";
-import twilio from "twilio";
 
 dotenv.config();
 
-// CHECK ENV VARIABLES
-if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
-  console.error("❌ Twilio credentials missing in .env");
-}
-
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 const sendOrderSMS = async (order) => {
   try {
-
     console.log("🚀 SMS function started");
 
     if (!order || !order.phone) {
@@ -26,16 +15,12 @@ const sendOrderSMS = async (order) => {
     // CLEAN PHONE NUMBER
     const cleanPhone = order.phone.replace(/\D/g, "").slice(-10);
 
-    // CREATE CUSTOMER PHONE
-    const customerPhone = `+91${cleanPhone}`;
+    console.log("📩 Sending SMS to:", cleanPhone);
 
-    console.log("📩 Sending SMS from:", process.env.TWILIO_PHONE_NUMBER);
-    console.log("📩 Sending SMS to:", customerPhone);
-
-    // ADMIN NUMBERS FROM ENV
+    // ADMIN NUMBERS
     const adminNumbers = process.env.ADMIN_PHONE
       .split(",")
-      .map(num => `+${num.replace(/\D/g, "")}`);
+      .map(num => num.replace(/\D/g, "").slice(-10));
 
     // CREATE ITEM LIST
     const itemList = order.items
@@ -68,35 +53,49 @@ ${itemList}
 
 Total: ₹${order.totalAmount}`;
 
-    // SEND SMS TO CUSTOMER
-    const customerMSG = await client.messages.create({
-      body: customerMessage,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: customerPhone
-    });
+    // 🔑 COMMON PARAMS
+    const baseParams = {
+      authorization: process.env.FAST2SMS_API_KEY,
+      route: "q", // VERY IMPORTANT (no DLT)
+      language: "english",
+    };
 
-    console.log("✅ Customer SMS SID:", customerMSG.sid);
+    // ✅ SEND TO CUSTOMER
+    const customerRes = await axios.get(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
+        params: {
+          ...baseParams,
+          message: customerMessage,
+          numbers: cleanPhone,
+        },
+      }
+    );
 
-    // SEND SMS TO ADMINS
+    console.log("✅ Customer SMS:", customerRes.data);
+
+    // ✅ SEND TO ADMINS
     for (const adminPhone of adminNumbers) {
-
       console.log("📩 Sending SMS to admin:", adminPhone);
 
-      const adminMSG = await client.messages.create({
-        body: adminMessage,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to: adminPhone
-      });
+      const adminRes = await axios.get(
+        "https://www.fast2sms.com/dev/bulkV2",
+        {
+          params: {
+            ...baseParams,
+            message: adminMessage,
+            numbers: adminPhone,
+          },
+        }
+      );
 
-      console.log("✅ Admin SMS SID:", adminMSG.sid);
+      console.log("✅ Admin SMS:", adminRes.data);
     }
 
-    console.log("🎉 All SMS messages sent successfully");
+    console.log("🎉 All SMS sent successfully (Fast2SMS)");
 
   } catch (error) {
-
-    console.error("❌ Twilio SMS error:", error.message);
-
+    console.error("❌ Fast2SMS error:", error.response?.data || error.message);
   }
 };
 
