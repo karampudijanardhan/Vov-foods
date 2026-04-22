@@ -12,55 +12,48 @@ const sendOrderSMS = async (order) => {
       return;
     }
 
-    // CLEAN PHONE NUMBER
+    // ✅ CLEAN CUSTOMER NUMBER (10 digits only)
     const cleanPhone = order.phone.replace(/\D/g, "").slice(-10);
 
-    console.log("📩 Sending SMS to:", cleanPhone);
+    console.log("📩 Customer Number:", cleanPhone);
 
-    // ADMIN NUMBERS
+    // ✅ ADMIN NUMBERS (from .env)
     const adminNumbers = process.env.ADMIN_PHONE
       .split(",")
       .map(num => num.replace(/\D/g, "").slice(-10));
 
-    // CREATE ITEM LIST
+    // ✅ ITEMS LIST (short format to avoid SMS cut)
     const itemList = order.items
-      .map(item => `${item.name} ${item.weight} × ${item.qty}`)
-      .join("\n");
+      .map(item => `${item.name}(${item.qty})`)
+      .join(", ");
 
-    // CUSTOMER MESSAGE
-    const customerMessage = `VOV Foods Order Confirmed
-
+    // ✅ CUSTOMER MESSAGE (safe)
+    const customerMessage =
+`VOV Foods Order Confirmed
 Order ID: ${order.orderRef}
+Total: Rs.${order.totalAmount}
+Thank you!`;
 
-Total Amount: ₹${order.totalAmount}
-
-Thank you for ordering from VOV Foods ❤️
-Your order will be delivered soon.`;
-
-    // ADMIN MESSAGE
-    const adminMessage = `🔥 New Order - VOV Foods
-
-Order ID: ${order.orderRef}
-
-Customer: ${order.name}
+    // ✅ ADMIN MESSAGE (optimized under limit)
+    const adminMessage =
+`New Order - VOV
+ID: ${order.orderRef}
+Name: ${order.name}
 Phone: ${cleanPhone}
+Addr: ${order.address}
+Items: ${itemList}
+Total: Rs.${order.totalAmount}`;
 
-Address:
-${order.address}
+    console.log("📦 ADMIN MESSAGE:\n", adminMessage);
 
-Items:
-${itemList}
-
-Total: ₹${order.totalAmount}`;
-
-    // 🔑 COMMON PARAMS
+    // ✅ COMMON PARAMS
     const baseParams = {
       authorization: process.env.FAST2SMS_API_KEY,
-      route: "q", // VERY IMPORTANT (no DLT)
+      route: "q", // IMPORTANT
       language: "english",
     };
 
-    // ✅ SEND TO CUSTOMER
+    // 🔹 SEND SMS TO CUSTOMER
     const customerRes = await axios.get(
       "https://www.fast2sms.com/dev/bulkV2",
       {
@@ -72,30 +65,33 @@ Total: ₹${order.totalAmount}`;
       }
     );
 
-    console.log("✅ Customer SMS:", customerRes.data);
+    console.log("✅ Customer SMS Sent:", customerRes.data);
 
-    // ✅ SEND TO ADMINS
+    // 🔹 SEND SMS TO ADMINS
     for (const adminPhone of adminNumbers) {
-      console.log("📩 Sending SMS to admin:", adminPhone);
+      console.log("📩 Sending to admin:", adminPhone);
 
       const adminRes = await axios.get(
         "https://www.fast2sms.com/dev/bulkV2",
         {
           params: {
             ...baseParams,
-            message: adminMessage,
+            message: adminMessage, // ✅ FIXED
             numbers: adminPhone,
           },
         }
       );
 
-      console.log("✅ Admin SMS:", adminRes.data);
+      console.log("✅ Admin SMS Sent:", adminRes.data);
     }
 
-    console.log("🎉 All SMS sent successfully (Fast2SMS)");
+    console.log("🎉 All SMS sent successfully");
 
   } catch (error) {
-    console.error("❌ Fast2SMS error:", error.response?.data || error.message);
+    console.error(
+      "❌ Fast2SMS Error:",
+      error.response?.data || error.message
+    );
   }
 };
 
