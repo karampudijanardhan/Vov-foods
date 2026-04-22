@@ -23,9 +23,10 @@ const sendOrderSMS = async (order) => {
       .map(num => num.replace(/\D/g, "").slice(-10));
 
     // ✅ ITEMS LIST (short format to avoid SMS cut)
-    const itemList = order.items
-      .map(item => `${item.name}(${item.qty})`)
-      .join(", ");
+    // ✅ ITEMS LIST (with weight)
+const itemList = order.items
+  .map(item => `${item.name} ${item.weight} x ${item.qty}`)
+  .join(", ");
 
     // ✅ CUSTOMER MESSAGE (safe)
     const customerMessage =
