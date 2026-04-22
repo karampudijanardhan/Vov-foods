@@ -3,16 +3,14 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { openWhatsAppChat, createOrderMessage } from "@/utils/whatsapp";
 
-const DELIVERY_CHARGE = 50;
-const FREE_DELIVERY_MIN = 599;
-
 export const CartSummary = () => {
   const { state } = useCart();
   const { items, subtotal } = state;
   const navigate = useNavigate();
 
-  const deliveryCharge = subtotal >= FREE_DELIVERY_MIN ? 0 : DELIVERY_CHARGE;
-  const total = subtotal + deliveryCharge;
+  // ✅ Delivery always FREE
+  const deliveryCharge = 0;
+  const total = subtotal;
 
   const handleWhatsAppOrder = () => {
     const orderItems = items.map((item) => ({
@@ -28,7 +26,7 @@ export const CartSummary = () => {
   const handleProceedCheckout = () => {
     const token = localStorage.getItem("token");
 
-    console.log("TOKEN =", token); // 👈 debug line
+    console.log("TOKEN =", token);
 
     if (!token) {
       alert("Please login to continue checkout 🔐");
@@ -53,20 +51,8 @@ export const CartSummary = () => {
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">Delivery</span>
-          <span className="font-medium">
-            {deliveryCharge === 0 ? (
-              <span className="text-cardamom">FREE</span>
-            ) : (
-              `₹${deliveryCharge}`
-            )}
-          </span>
+          <span className="font-medium text-cardamom">FREE</span>
         </div>
-
-        {deliveryCharge > 0 && (
-          <p className="text-xs text-primary">
-            Add ₹{FREE_DELIVERY_MIN - subtotal} more for free delivery!
-          </p>
-        )}
       </div>
 
       <div className="border-t border-border pt-4">
@@ -77,7 +63,6 @@ export const CartSummary = () => {
       </div>
 
       <div className="space-y-2 pt-2">
-        {/* ✅ NO <Link> HERE */}
         <Button
           type="button"
           className="w-full gradient-saffron hover:opacity-90"
