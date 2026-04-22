@@ -75,20 +75,15 @@ const total = subtotal + deliveryCharge;
       localStorage.setItem("addresses", JSON.stringify(addresses));
       setSavedAddresses(addresses);
     }
-navigate("/payment", {
-  state: {
-    formData,
-    items: items.map(item => ({
-      productId: item.product.id,
-      name: item.product.name,
-      weight: item.selectedWeight,
-      qty: item.quantity,
-      price: item.price
-    })),
-    subtotal,
-    total
-  }
-});
+
+    navigate("/payment", {
+      state: {
+        formData,
+        items,
+        subtotal,
+        total
+      }
+    });
 
   };
 
